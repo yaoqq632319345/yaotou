@@ -1,0 +1,26 @@
+{
+  "name": "@yaotou/core",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "姚头 <632319345@qq.com>",
+  "homepage": "https://github.com/yaoqq632319345/yaotou/tree/main/packages/core#readme",
+  "license": "ISC",
+  "main": "lib/core.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yaoqq632319345/yaotou.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/yaoqq632319345/yaotou/issues"
+  }
+}
