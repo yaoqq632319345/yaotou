@@ -1,6 +1,6 @@
 {
   "name": "@yaotou/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "> TODO: description",
   "author": "姚头 <632319345@qq.com>",
   "homepage": "https://github.com/yaoqq632319345/yaotou/tree/main/packages/core#readme",
@@ -14,7 +14,7 @@
     "lib"
   ],
   "dependencies": {
-    "@yaotou/utils": "^1.0.0"
+    "@yaotou/utils": "^1.0.1"
   },
   "repository": {
     "type": "git",
