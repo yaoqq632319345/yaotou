@@ -1,0 +1,26 @@
+{
+  "name": "yaotou",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yaoqq632319345/yaotou.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yaoqq632319345/yaotou/issues"
+  },
+  "homepage": "https://github.com/yaoqq632319345/yaotou#readme",
+  "devDependencies": {
+    "lerna": "^5.3.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
