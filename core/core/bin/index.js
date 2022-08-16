@@ -6,5 +6,5 @@ if (importLocal(__dirname)) {
   // console.log('本地版本');
   require('npmlog').info('cli', '正在使用 yaotou 的本地版本');
 } else {
-  require('../lib')();
+  require('../lib')(process.argv.slice(2));
 }
