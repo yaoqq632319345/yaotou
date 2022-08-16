@@ -21,6 +21,7 @@
     "lerna": "^5.3.0"
   },
   "workspaces": [
-    "packages/*"
+    "core/*",
+    "utils/*"
   ]
 }
