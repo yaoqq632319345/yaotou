@@ -1,6 +1,6 @@
 {
   "name": "@yaotou/core",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "> TODO: description",
   "author": "姚头 <632319345@qq.com>",
   "homepage": "https://github.com/yaoqq632319345/yaotou/tree/main/packages/core#readme",
@@ -20,8 +20,8 @@
     "lib"
   ],
   "dependencies": {
-    "@yaotou/utils": "file: ../../../../utils/utils",
     "@yaotou/log": "file: ../../../../utils/log",
+    "@yaotou/utils": "file: ../../../../utils/utils",
     "import-local": "^3.1.0",
     "npmlog": "^6.0.2"
   },
