@@ -14,8 +14,7 @@
     "lib"
   ],
   "publishConfig": {
-    "access": "public",
-    "registry": "https://mirrors.cloud.tencent.com/npm/"
+    "access": "public"
   },
   "repository": {
     "type": "git",
