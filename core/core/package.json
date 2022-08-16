@@ -20,7 +20,7 @@
     "lib"
   ],
   "dependencies": {
-    "@yaotou/utils": "^1.0.4"
+    "@yaotou/utils": "file: ../../../../utils/utils"
   },
   "repository": {
     "type": "git",
