@@ -11,9 +11,19 @@ function core(args) {
   try {
     checkVersion();
     checkNodeVersion();
+    checkRoot();
   } catch (error) {
     log.error(error);
   }
+}
+
+// 检查root 登录账户,
+// npm: root-check
+function checkRoot() {
+  log.verbose(process.geteuid());
+  const rootCheck = require('root-check');
+  rootCheck();
+  log.verbose(process.geteuid());
 }
 
 function checkVersion() {
