@@ -1,11 +1,7 @@
 'use strict';
 
-module.exports = log;
-
 const npmlog = require('npmlog');
-npmlog.level = process.env.DEBUG_ ? process.env.DEBUG_ : 'info';
-function log() {
-  npmlog.heading = '姚头';
-  npmlog.addLevel('success', 3000);
-  npmlog.success('123123');
-}
+npmlog.heading = 'yaotou';
+npmlog.headingStyle = { fg: 'red', bg: 'blue' };
+npmlog.level = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 'info';
+module.exports = npmlog;

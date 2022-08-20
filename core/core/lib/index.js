@@ -7,5 +7,5 @@ function core(args) {
 }
 
 function checkVersion() {
-  log();
+  log.notice('cli version', pkg.version);
 }
