@@ -1,10 +1,13 @@
 'use strict';
 const semver = require('semver');
 const colors = require('colors/safe');
-const pkg = require('../package.json');
-const log = require('@yaotou/log');
+const userHome = require('user-home');
+const pathExists = require('path-exists');
 
+const log = require('@yaotou/log');
+const pkg = require('../package.json');
 const constant = require('./const');
+
 module.exports = core;
 
 function core(args) {
@@ -12,8 +15,17 @@ function core(args) {
     checkVersion();
     checkNodeVersion();
     checkRoot();
+    checkUserHome();
   } catch (error) {
     log.error(error);
+  }
+}
+
+// 检查用户主目录
+// npm: user-home & path-exists
+function checkUserHome() {
+  if (!userHome || !pathExists(userHome)) {
+    throw new Error(colors.red('当前登录用户主目录不存在'));
   }
 }
 
@@ -26,10 +38,14 @@ function checkRoot() {
   log.verbose(process.geteuid());
 }
 
+// 项目版本
+// npm: npmlog
 function checkVersion() {
   log.notice('cli version', pkg.version);
 }
 
+// 检查node 版本
+// npm: semver
 function checkNodeVersion() {
   // 1. 获取当前node 版本
   const current = process.version;
