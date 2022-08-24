@@ -1,14 +1,15 @@
 'use strict';
+const path = require('path');
 const semver = require('semver');
 const colors = require('colors/safe');
 const userHome = require('user-home');
-// const pathExists = require('path-exists');
+const pathExists = require('path-exists');
 
 const log = require('@yaotou/log');
 const pkg = require('../package.json');
 const constant = require('./const');
 
-let args;
+let args, config;
 module.exports = core;
 
 function core(args) {
@@ -17,10 +18,36 @@ function core(args) {
     checkVersion();
     checkNodeVersion();
     checkRoot();
-    // checkUserHome();
+    checkUserHome();
+    checkEnv();
   } catch (error) {
     log.error(error);
   }
+}
+
+// npm: dotenv
+function checkEnv() {
+  const dotenv = require('dotenv');
+  const dotenvPath = path.resolve(userHome, '.env');
+  if (pathExists(dotenvPath)) {
+    log.verbose('环境变量', '存在.env文件');
+    dotenv.config({
+      path: path.resolve(userHome, '.env'),
+    });
+  }
+  createDefaultConfig();
+  log.verbose('环境变量', process.env.CLI_HOME_PATH);
+}
+function createDefaultConfig() {
+  const cliConfig = {
+    home: userHome,
+  };
+  if (process.env.CLI_HOME) {
+    cliConfig['cliHome'] = path.join(userHome, process.env.CLI_HOME);
+  } else {
+    cliConfig['cliHome'] = path.join(userHome, constant.DEFAULT_CLI_HOME);
+  }
+  process.env.CLI_HOME_PATH = cliConfig.cliHome;
 }
 
 // 检查debug 参数
@@ -44,6 +71,7 @@ function checkArgs() {
 // npm: user-home & path-exists
 // path-exists 不支持require 4.0 版本也装不上，先不用了，跳过
 function checkUserHome() {
+  log.verbose('检查用户主目录');
   if (!userHome || !pathExists(userHome)) {
     throw new Error(colors.red('当前登录用户主目录不存在'));
   }
