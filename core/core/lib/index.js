@@ -39,7 +39,6 @@ function checkEnv() {
   log.verbose('环境变量', process.env.CLI_HOME_PATH);
 }
 function createDefaultConfig() {
-  console.log(1);
   if (process.env.CLI_HOME) {
     process.env.CLI_HOME_PATH = path.join(userHome, process.env.CLI_HOME);
   } else {
