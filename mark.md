@@ -1,2 +1,3 @@
 - path-exists@4.0.0 老装不上，老是 5.0.0
+  - 已解决: 根目录下，package-lock.json path-exists 5.0.0 -> 4.0.0
 - 项目根目录下 node_modules 下@yaotou/core 每次 npm 安装包，或者 lerna 安装包时，就会出来
