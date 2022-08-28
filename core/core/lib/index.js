@@ -12,7 +12,7 @@ const constant = require('./const');
 let args, config;
 module.exports = core;
 
-function core(args) {
+async function core(args) {
   checInputArgs();
   try {
     checkVersion();
@@ -20,9 +20,22 @@ function core(args) {
     checkRoot();
     checkUserHome();
     checkEnv();
+    await checkGlobalUpdate();
   } catch (error) {
     log.error(error);
   }
+}
+
+async function checkGlobalUpdate() {
+  // 1. 获取当前版本号和模块名
+  const currentVersion = pkg.version;
+  const npmName = pkg.name;
+  // 2. 调用npm api 获取所有版本号
+  const { getNpmVersion } = require('@yaotou/get-npm-info');
+  const data = await getNpmVersion(npmName);
+  console.log(data);
+  // 3. 提取所有版本号，比对哪些版本号是大于当前版本号
+  // 4. 获取最新版本号，提示用户更新到该版本
 }
 
 // npm: dotenv

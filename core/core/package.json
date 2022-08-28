@@ -20,6 +20,7 @@
     "lib"
   ],
   "dependencies": {
+    "@yaotou/get-npm-info": "file: ../../../../utils/get-npm-info",
     "@yaotou/log": "file: ../../../../utils/log",
     "@yaotou/utils": "file: ../../../../utils/utils",
     "colors": "^1.4.0",
