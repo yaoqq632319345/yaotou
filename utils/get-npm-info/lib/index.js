@@ -3,8 +3,7 @@ const axios = require('axios');
 const semver = require('semver');
 const urlJoin = require('url-join');
 
-module.exports = { getNpmInfo, getNpmVersion };
-
+// 获取包信息
 function getNpmInfo(npmName, registry) {
   if (!npmName) {
     return null;
@@ -32,6 +31,7 @@ function getDefaultRegistry(isOriginal = false) {
     : 'https://registry.npm.taobao.org';
 }
 
+// 获取所有已发布版本信息
 async function getNpmVersion(npmName, registry) {
   const data = await getNpmInfo(npmName, registry);
   if (data) {
@@ -41,4 +41,22 @@ async function getNpmVersion(npmName, registry) {
   }
 }
 
-function getNpmSemverVersions(baseVersion, versions) {}
+// 获取大于当前版本的所有版本号，并排序
+function getSemverVersions(baseVersion, versions) {
+  versions = versions
+    .filter((version) => semver.satisfies(version, `^${baseVersion}`))
+    .sort((a, b) => semver.gt(b, a));
+  return versions;
+}
+
+// 获取最新版本号
+async function getNpmSemverVersion(baseVersion, npmName, registry) {
+  const versions = await getNpmVersion(npmName, registry);
+  const newVersions = getSemverVersions(baseVersion, versions);
+  if (newVersions && newVersions.length > 0) {
+    return newVersions[0];
+  }
+  return null;
+}
+
+module.exports = { getNpmInfo, getNpmVersion, getNpmSemverVersion };
