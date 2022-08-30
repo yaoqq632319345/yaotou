@@ -3,17 +3,18 @@ const path = require('path');
 const semver = require('semver');
 const colors = require('colors/safe');
 const userHome = require('user-home');
-const pathExists = require('path-exists');
-
+const pathExists = require('path-exists').sync;
+const commander = require('commander');
 const log = require('@yaotou/log');
 const pkg = require('../package.json');
 const constant = require('./const');
 
+const program = new commander.Command();
 let args, config;
 module.exports = core;
 
 async function core(args) {
-  checInputArgs();
+  // checInputArgs();
   try {
     checkVersion();
     checkNodeVersion();
@@ -21,8 +22,36 @@ async function core(args) {
     checkUserHome();
     checkEnv();
     await checkGlobalUpdate();
+    // 注册命令
+    registerCommand();
   } catch (error) {
     log.error(error);
+  }
+}
+function registerCommand() {
+  program
+    .name(Object.keys(pkg.bin)[0])
+    .usage('<command> [options]')
+    .version(pkg.version)
+    .option('-d --debug', '是否开启debug模式');
+  program.on('option:debug', () => {
+    // program.debug -> program.opts().debug
+    if (program.opts().debug) {
+      process.env.LOG_LEVEL = 'verbose';
+    } else {
+      process.env.LOG_LEVEL = 'info';
+    }
+    log.level = process.env.LOG_LEVEL;
+  });
+  program.on('command:*', (obj) => {
+    console.error('未知的命令:', obj[0]);
+    // 拿到所有命令
+    const allCmd = program.commands.map((cmd) => cmd.name());
+    console.log('可用命令：', allCmd.join(', '));
+  });
+  program.parse(process.argv); // 先解析参数， 才能取program.args
+  if (program.args && program.args.length < 1) {
+    program.outputHelp();
   }
 }
 
