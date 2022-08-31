@@ -1,7 +1,7 @@
 'use strict';
 
-const init = require('..');
+const init = require('../lib');
 
 describe('@yaotou/init', () => {
-    it('needs tests');
+  it('needs tests');
 });

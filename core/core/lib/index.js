@@ -9,6 +9,9 @@ const log = require('@yaotou/log');
 const pkg = require('../package.json');
 const constant = require('./const');
 
+// commands
+const init = require('@yaotou/init');
+
 const program = new commander.Command();
 let args, config;
 module.exports = core;
@@ -34,6 +37,13 @@ function registerCommand() {
     .usage('<command> [options]')
     .version(pkg.version)
     .option('-d --debug', '是否开启debug模式');
+
+  // 注册命令
+  program
+    .command('init [projectName]')
+    .option('-f --force', '是否强制初始化项目')
+    .action(init);
+
   program.on('option:debug', () => {
     // program.debug -> program.opts().debug
     if (program.opts().debug) {
