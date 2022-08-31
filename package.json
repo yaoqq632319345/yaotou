@@ -22,6 +22,7 @@
   },
   "workspaces": [
     "core/*",
+    "commands/*",
     "utils/*"
   ]
 }
