@@ -13,23 +13,24 @@ const constant = require('./const');
 const init = require('@yaotou/init');
 
 const program = new commander.Command();
-let args, config;
 module.exports = core;
 
 async function core(args) {
-  // checInputArgs();
   try {
-    checkVersion();
-    checkNodeVersion();
-    checkRoot();
-    checkUserHome();
-    checkEnv();
-    await checkGlobalUpdate();
+    await prepare();
     // 注册命令
     registerCommand();
   } catch (error) {
     log.error(error);
   }
+}
+async function prepare() {
+  checkVersion();
+  checkNodeVersion();
+  checkRoot();
+  checkUserHome();
+  checkEnv();
+  await checkGlobalUpdate();
 }
 function registerCommand() {
   program
@@ -96,13 +97,13 @@ function checkEnv() {
   const dotenv = require('dotenv');
   const dotenvPath = path.resolve(userHome, '.env');
   if (pathExists(dotenvPath)) {
-    log.verbose('环境变量', '存在.env文件');
+    // log.verbose('环境变量', '存在.env文件');
     dotenv.config({
       path: path.resolve(userHome, '.env'),
     });
   }
   createDefaultConfig();
-  log.verbose('环境变量', process.env.CLI_HOME_PATH);
+  // log.verbose('环境变量', process.env.CLI_HOME_PATH);
 }
 function createDefaultConfig() {
   if (process.env.CLI_HOME) {
@@ -112,28 +113,10 @@ function createDefaultConfig() {
   }
 }
 
-// 检查debug 参数
-// npm: minimist
-function checInputArgs() {
-  const minimist = require('minimist');
-  args = minimist(process.argv.slice(2));
-  checkArgs();
-}
-
-function checkArgs() {
-  if (args.debug) {
-    process.env.LOG_LEVEL = 'verbose';
-  } else {
-    process.env.LOG_LEVEL = 'info';
-  }
-  log.level = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 'info';
-}
-
 // 检查用户主目录
 // npm: user-home & path-exists
-// path-exists 不支持require 4.0 版本也装不上，先不用了，跳过
 function checkUserHome() {
-  log.verbose('检查用户主目录');
+  // log.verbose('检查用户主目录');
   if (!userHome || !pathExists(userHome)) {
     throw new Error(colors.red('当前登录用户主目录不存在'));
   }
@@ -142,10 +125,10 @@ function checkUserHome() {
 // 检查root 登录账户,
 // npm: root-check
 function checkRoot() {
-  log.verbose('检查登录账户，前：', process.geteuid());
+  // log.verbose('检查登录账户，前：', process.geteuid());
   const rootCheck = require('root-check');
   rootCheck();
-  log.verbose('检查登录账户，后：', process.geteuid());
+  // log.verbose('检查登录账户，后：', process.geteuid());
 }
 
 // 项目版本
@@ -161,7 +144,7 @@ function checkNodeVersion() {
   const current = process.version;
   // 2. 对比最低版本
   const lowest_version = constant.LOWEST_NODE_VERSION;
-  log.verbose('对比node version', '当前：', current, '最低：', lowest_version);
+  // log.verbose('对比node version', '当前：', current, '最低：', lowest_version);
   if (!semver.gte(current, lowest_version)) {
     throw new Error(
       colors.red(`需要安装 v${lowest_version} 以上版本的 Node.js`)
