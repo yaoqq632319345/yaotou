@@ -36,7 +36,8 @@ function registerCommand() {
     .name(Object.keys(pkg.bin)[0])
     .usage('<command> [options]')
     .version(pkg.version)
-    .option('-d --debug', '是否开启debug模式');
+    .option('-d --debug', '是否开启debug模式')
+    .option('-tp --targetPath <targetPath>', '是否指定本地调试文件路径');
 
   // 注册命令
   program
