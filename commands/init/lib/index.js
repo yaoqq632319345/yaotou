@@ -7,7 +7,8 @@
  * @param {*} cmdObj.parent.opts() === { targetPath: targetPathName }
  */
 function init(projectName, opt, cmdObj) {
-  console.log(projectName, opt, cmdObj.parent.opts().targetPath);
+  // console.log(projectName, opt, cmdObj.parent.opts().targetPath);
+  console.log(projectName, opt, process.env.CLI_TARGET_PATH);
 }
 
 module.exports = init;

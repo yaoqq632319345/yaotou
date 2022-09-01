@@ -39,6 +39,10 @@ function registerCommand() {
     .option('-d --debug', '是否开启debug模式')
     .option('-tp --targetPath <targetPath>', '是否指定本地调试文件路径');
 
+  program.on('option:targetPath', () => {
+    process.env.CLI_TARGET_PATH = program.opts().targetPath;
+  });
+
   // 注册命令
   program
     .command('init [projectName]')
