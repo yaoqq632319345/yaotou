@@ -22,6 +22,7 @@
   "dependencies": {
     "@yaotou/get-npm-info": "file: ../../../../utils/get-npm-info",
     "@yaotou/log": "file: ../../../../utils/log",
+    "@yaotou/exec": "file: ../exec",
     "@yaotou/utils": "file: ../../../../utils/utils",
     "@yaotou/init": "file: ../../../../commands/init",
     "colors": "^1.4.0",

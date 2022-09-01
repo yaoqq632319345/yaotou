@@ -11,6 +11,7 @@ const constant = require('./const');
 
 // commands
 const init = require('@yaotou/init');
+const exec = require('@yaotou/exec');
 
 const program = new commander.Command();
 module.exports = core;
@@ -48,7 +49,7 @@ function registerCommand() {
   program
     .command('init [projectName]')
     .option('-f --force', '是否强制初始化项目')
-    .action(init);
+    .action(exec);
 
   program.on('option:debug', () => {
     // program.debug -> program.opts().debug
