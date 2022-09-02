@@ -23,6 +23,7 @@
   "workspaces": [
     "core/*",
     "commands/*",
+    "models/*",
     "utils/*"
   ]
 }
