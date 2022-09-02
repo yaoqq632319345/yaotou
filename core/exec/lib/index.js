@@ -1,5 +1,6 @@
 'use strict';
 
+const Package = require('@yaotou/package');
 module.exports = exec;
 
 function exec() {
@@ -9,4 +10,5 @@ function exec() {
   // 2. modulePath -> Package(npm 模块)
   // 3. 创建Package 类, -> getRootFile() 获取入口文件
   // 4. Package.update / Package.install
+  new Package();
 }
