@@ -10,6 +10,9 @@
     "lib": "lib",
     "test": "__tests__"
   },
+  "dependencies": {
+    "@yaotou/utils": "file:../../utils/utils"
+  },
   "files": [
     "lib"
   ],

@@ -11,7 +11,8 @@
     "test": "__tests__"
   },
   "dependencies": {
-    "@yaotou/package": "file:../../models/package"
+    "@yaotou/package": "file:../../models/package",
+    "@yaotou/log": "file:../../utils/log"
   },
   "files": [
     "lib"
