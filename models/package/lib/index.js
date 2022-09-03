@@ -24,7 +24,7 @@ class Package {
   // 安装
   install() {
     // npm: npminstall
-    npminstall({
+    return npminstall({
       root: this.targetPath,
       storeDir: this.storeDir,
       register: getDefaultRegistry(),

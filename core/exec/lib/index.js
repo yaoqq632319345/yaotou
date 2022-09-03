@@ -10,7 +10,7 @@ const SETTINGS = {
 };
 const CACHE_DIR = 'dependencies';
 
-function exec(...args) {
+async function exec(...args) {
   let targetPath = process.env.CLI_TARGET_PATH;
   let storeDir;
   let pkg;
@@ -46,13 +46,10 @@ function exec(...args) {
     // 更新
   } else {
     // 安装
-    pkg.install();
+    await pkg.install();
   }
   const rootFile = pkg.getRootFile();
-  if (rootFile) {
-    // if 判断是解决 The "id" argument must be of type string. Received null 报错
-    require(rootFile)(...args);
-  }
+  require(rootFile)(...args);
 }
 
 module.exports = exec;
