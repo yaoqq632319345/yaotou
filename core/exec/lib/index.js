@@ -6,7 +6,7 @@ const Package = require('@yaotou/package');
 const log = require('@yaotou/log');
 
 const SETTINGS = {
-  init: '@imooc-cli/init',
+  init: '@yaotou/init',
 };
 const CACHE_DIR = 'dependencies';
 
@@ -33,21 +33,29 @@ async function exec(...args) {
   const packageName = SETTINGS[cmdName]; // 动态获取包名，这里暂时写死了
   const packageVersion = 'latest';
   if (!targetPath) {
+    // 走缓存
     targetPath = path.resolve(homePath, CACHE_DIR);
     storeDir = path.resolve(targetPath, 'node_modules');
-  }
-  pkg = new Package({
-    targetPath,
-    storeDir,
-    packageName,
-    packageVersion,
-  });
-  if (await pkg.exists()) {
-    // 更新
-    await pkg.update();
+    pkg = new Package({
+      targetPath,
+      storeDir,
+      packageName,
+      packageVersion,
+    });
+    if (await pkg.exists()) {
+      // 更新
+      await pkg.update();
+    } else {
+      // 安装
+      await pkg.install();
+    }
   } else {
-    // 安装
-    await pkg.install();
+    // 走具体路径
+    pkg = new Package({
+      targetPath,
+      packageName,
+      packageVersion,
+    });
   }
   const rootFile = pkg.getRootFile();
   if (rootFile) {

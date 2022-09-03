@@ -97,18 +97,25 @@ class Package {
   }
   // 获取入口文件
   getRootFile() {
-    // 1. 获取package.json 所在目录  --- pkg-dir
-    const dir = pkgDir(this.targetPath);
-    if (dir) {
-      // 2. 读取package.json ----------- require() 支持json
-      const pkgFile = require(path.resolve(dir, 'package.json'));
-      // 3. 读取main - lib 字段
-      if (pkgFile && pkgFile.main) {
-        // 4. 路径兼容
-        return formatPath(path.resolve(dir, pkgFile.main));
+    function _getRootFile(targetPath) {
+      // 1. 获取package.json 所在目录  --- pkg-dir
+      const dir = pkgDir(targetPath);
+      if (dir) {
+        // 2. 读取package.json ----------- require() 支持json
+        const pkgFile = require(path.resolve(dir, 'package.json'));
+        // 3. 读取main - lib 字段
+        if (pkgFile && pkgFile.main) {
+          // 4. 路径兼容
+          return formatPath(path.resolve(dir, pkgFile.main));
+        }
       }
+      return null;
     }
-    return null;
+    if (this.storeDir) {
+      return _getRootFile(this.cacheFilePath);
+    } else {
+      return _getRootFile(this.targetPath);
+    }
   }
 }
 module.exports = Package;
