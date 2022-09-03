@@ -6,7 +6,7 @@ const Package = require('@yaotou/package');
 const log = require('@yaotou/log');
 
 const SETTINGS = {
-  init: '@yaotou/init',
+  init: '@imooc-cli/init',
 };
 const CACHE_DIR = 'dependencies';
 
@@ -42,14 +42,17 @@ async function exec(...args) {
     packageName,
     packageVersion,
   });
-  if (pkg.exists()) {
+  if (await pkg.exists()) {
     // 更新
+    console.log('@yaotou/exec', '更新');
   } else {
     // 安装
     await pkg.install();
   }
   const rootFile = pkg.getRootFile();
-  require(rootFile)(...args);
+  if (rootFile) {
+    require(rootFile)(...args);
+  }
 }
 
 module.exports = exec;

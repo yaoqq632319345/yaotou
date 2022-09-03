@@ -12,9 +12,10 @@
   },
   "dependencies": {
     "@yaotou/format-path": "file:../../utils/format-path",
-    "@yaotou/utils": "file:../../utils/utils",
     "@yaotou/get-npm-info": "file:../../utils/get-npm-info",
+    "@yaotou/utils": "file:../../utils/utils",
     "npminstall": "^6.5.1",
+    "path-exists": "4.0.0",
     "pkg-dir": "5.0.0"
   },
   "files": [

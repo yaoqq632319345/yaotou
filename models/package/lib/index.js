@@ -1,10 +1,14 @@
 'use strict';
 const pkgDir = require('pkg-dir').sync;
 const npminstall = require('npminstall');
+const pathExists = require('path-exists').sync;
 const path = require('path');
 const { isObject } = require('@yaotou/utils');
 const formatPath = require('@yaotou/format-path');
-const { getDefaultRegistry } = require('@yaotou/get-npm-info');
+const {
+  getDefaultRegistry,
+  getNpmLatestVersion,
+} = require('@yaotou/get-npm-info');
 class Package {
   constructor(options) {
     if (!options) {
@@ -18,11 +22,35 @@ class Package {
     this.storeDir = options.storeDir;
     this.packageName = options.packageName;
     this.packageVersion = options.packageVersion;
+
+    this.cacheFilePathPrefix = this.packageName.replace('/', '_');
+  }
+  async prepare() {
+    if (this.packageVersion === 'latest') {
+      this.packageVersion = await getNpmLatestVersion(this.packageName);
+    }
+  }
+  get cacheFilePath() {
+    // @yaotou-cli/init -> _@yaotou-cli_init@x.x.x@@yaotou-cli/init
+    // 拼接目录
+    return path.resolve(
+      this.storeDir,
+      `_${this.cacheFilePathPrefix}@${this.packageVersion}@${this.packageName}`
+    );
   }
   // 判断当前package 是否存在
-  exists() {}
+  async exists() {
+    if (this.storeDir) {
+      // 去缓存目录里查，但是需要确定到具体版本号
+      await this.prepare();
+      return pathExists(this.cacheFilePath);
+    } else {
+      return pathExists(this.targetPath);
+    }
+  }
   // 安装
-  install() {
+  async install() {
+    await this.prepare();
     // npm: npminstall
     return npminstall({
       root: this.targetPath,
