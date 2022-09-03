@@ -44,7 +44,7 @@ async function exec(...args) {
   });
   if (await pkg.exists()) {
     // 更新
-    console.log('@yaotou/exec', '更新');
+    await pkg.update();
   } else {
     // 安装
     await pkg.install();
