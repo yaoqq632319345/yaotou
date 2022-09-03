@@ -1,14 +1,19 @@
 'use strict';
 
+const path = require('path');
+
 const Package = require('@yaotou/package');
 const log = require('@yaotou/log');
 
 const SETTINGS = {
   init: '@yaotou/init',
 };
+const CACHE_DIR = 'dependencies';
 
 function exec(...args) {
-  const targetPath = process.env.CLI_TARGET_PATH;
+  let targetPath = process.env.CLI_TARGET_PATH;
+  let storeDir;
+  let pkg;
   const homePath = process.env.CLI_HOME_PATH;
   log.verbose('@yaotou/exec', 'targetPath', targetPath);
   log.verbose('@yaotou/exec', 'homePath', homePath);
@@ -27,12 +32,27 @@ function exec(...args) {
   const cmdName = cmdObj.name();
   const packageName = SETTINGS[cmdName]; // 动态获取包名，这里暂时写死了
   const packageVersion = 'latest';
-  const pkg = new Package({
+  if (!targetPath) {
+    targetPath = path.resolve(homePath, CACHE_DIR);
+    storeDir = path.resolve(targetPath, 'node_modules');
+  }
+  pkg = new Package({
     targetPath,
+    storeDir,
     packageName,
     packageVersion,
   });
-  console.log(pkg.getRootFile());
+  if (pkg.exists()) {
+    // 更新
+  } else {
+    // 安装
+    pkg.install();
+  }
+  const rootFile = pkg.getRootFile();
+  if (rootFile) {
+    // if 判断是解决 The "id" argument must be of type string. Received null 报错
+    require(rootFile)(...args);
+  }
 }
 
 module.exports = exec;

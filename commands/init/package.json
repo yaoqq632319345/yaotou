@@ -13,6 +13,9 @@
   "files": [
     "lib"
   ],
+  "dependencies": {
+    "@yaotou/log": "file: ../../utils/log"
+  },
   "publishConfig": {
     "registry": "https://registry.npmmirror.com/"
   },

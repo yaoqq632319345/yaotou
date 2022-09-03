@@ -11,8 +11,10 @@
     "test": "__tests__"
   },
   "dependencies": {
-    "@yaotou/utils": "file:../../utils/utils",
     "@yaotou/format-path": "file:../../utils/format-path",
+    "@yaotou/utils": "file:../../utils/utils",
+    "@yaotou/get-npm-info": "file:../../utils/get-npm-info",
+    "npminstall": "^6.5.1",
     "pkg-dir": "5.0.0"
   },
   "files": [

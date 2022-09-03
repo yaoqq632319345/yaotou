@@ -1,4 +1,5 @@
 'use strict';
+const log = require('@yaotou/log');
 /**
  *  yaotou init projectName --targetPath targetPathName --force
  * @param {*} projectName === projectName
@@ -8,7 +9,7 @@
  */
 function init(projectName, opt, cmdObj) {
   // console.log(projectName, opt, cmdObj.parent.opts().targetPath);
-  console.log(projectName, opt, process.env.CLI_TARGET_PATH);
+  log.verbose('@yaotou/init', projectName, opt, process.env.CLI_TARGET_PATH);
 }
 
 module.exports = init;

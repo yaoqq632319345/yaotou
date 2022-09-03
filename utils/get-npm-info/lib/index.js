@@ -59,4 +59,9 @@ async function getNpmSemverVersion(baseVersion, npmName, registry) {
   return null;
 }
 
-module.exports = { getNpmInfo, getNpmVersion, getNpmSemverVersion };
+module.exports = {
+  getNpmInfo,
+  getNpmVersion,
+  getNpmSemverVersion,
+  getDefaultRegistry,
+};

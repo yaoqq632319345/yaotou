@@ -1,8 +1,10 @@
 'use strict';
 const pkgDir = require('pkg-dir').sync;
+const npminstall = require('npminstall');
 const path = require('path');
 const { isObject } = require('@yaotou/utils');
 const formatPath = require('@yaotou/format-path');
+const { getDefaultRegistry } = require('@yaotou/get-npm-info');
 class Package {
   constructor(options) {
     if (!options) {
@@ -13,13 +15,27 @@ class Package {
     }
     // package 路径
     this.targetPath = options.targetPath;
+    this.storeDir = options.storeDir;
     this.packageName = options.packageName;
     this.packageVersion = options.packageVersion;
   }
   // 判断当前package 是否存在
   exists() {}
   // 安装
-  install() {}
+  install() {
+    // npm: npminstall
+    npminstall({
+      root: this.targetPath,
+      storeDir: this.storeDir,
+      register: getDefaultRegistry(),
+      pkgs: [
+        {
+          name: this.packageName,
+          version: this.packageVersion,
+        },
+      ],
+    });
+  }
   // 更新
   update() {}
   // 获取入口文件
