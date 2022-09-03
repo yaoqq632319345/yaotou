@@ -32,7 +32,7 @@ function exec(...args) {
     packageName,
     packageVersion,
   });
-  console.log(pkg);
+  console.log(pkg.getRootFile());
 }
 
 module.exports = exec;

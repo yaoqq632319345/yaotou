@@ -1,5 +1,8 @@
 'use strict';
+const pkgDir = require('pkg-dir').sync;
+const path = require('path');
 const { isObject } = require('@yaotou/utils');
+const formatPath = require('@yaotou/format-path');
 class Package {
   constructor(options) {
     if (!options) {
@@ -10,8 +13,6 @@ class Package {
     }
     // package 路径
     this.targetPath = options.targetPath;
-    // package 存储路径
-    this.storePath = options.storePath;
     this.packageName = options.packageName;
     this.packageVersion = options.packageVersion;
   }
@@ -22,6 +23,19 @@ class Package {
   // 更新
   update() {}
   // 获取入口文件
-  getRootFile() {}
+  getRootFile() {
+    // 1. 获取package.json 所在目录  --- pkg-dir
+    const dir = pkgDir(this.targetPath);
+    if (dir) {
+      // 2. 读取package.json ----------- require() 支持json
+      const pkgFile = require(path.resolve(dir, 'package.json'));
+      // 3. 读取main - lib 字段
+      if (pkgFile && pkgFile.main) {
+        // 4. 路径兼容
+        return formatPath(path.resolve(dir, pkgFile.main));
+      }
+    }
+    return null;
+  }
 }
 module.exports = Package;
