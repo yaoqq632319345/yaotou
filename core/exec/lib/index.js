@@ -59,9 +59,13 @@ async function exec(...args) {
   }
   const rootFile = pkg.getRootFile();
   if (rootFile) {
-    // 在当前进程执行
-    require(rootFile)(...args);
-    // 其他进程执行
+    try {
+      // 在当前进程执行
+      require(rootFile)(...args);
+      // 其他进程执行
+    } catch (error) {
+      log.error(error.message);
+    }
   }
 }
 

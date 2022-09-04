@@ -2,7 +2,14 @@
 const log = require('@yaotou/log');
 const Command = require('@yaotou/command');
 
-class InitCommand extends Command {}
+class InitCommand extends Command {
+  init() {
+    log.verbose('@yaotou/init', this._projectName, this._opt.force);
+  }
+  exec() {
+    log.verbose('@yaotou/init', 'exec');
+  }
+}
 /**
  *  yaotou init projectName --targetPath targetPathName --force
  * @param {*} projectName === projectName

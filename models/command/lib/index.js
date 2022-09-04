@@ -1,21 +1,29 @@
 'use strict';
 const semver = require('semver');
 const colors = require('colors');
+
+const log = require('@yaotou/log');
 const LOWEST_NODE_VERSION = '12.0.0';
 
 class Command {
   constructor(projectName, opt, cmdObj) {
+    // TODO 参数校验
     this._projectName = projectName;
     this._opt = opt;
     this._cmdObj = cmdObj;
 
     let runner = new Promise((resove, reject) => {
       let chain = Promise.resolve();
-      chain = chain.then(() => {
-        this.checkNodeVersion();
+      chain = chain.then(() => this.checkNodeVersion());
+      chain = chain.then(() => this.initArgs());
+      chain = chain.then(() => this.init());
+      chain = chain.then(() => this.exec());
+      chain.catch((error) => {
+        log.error(error.message);
       });
     });
   }
+  initArgs() {}
 
   // 检查node 版本
   // npm: semver
