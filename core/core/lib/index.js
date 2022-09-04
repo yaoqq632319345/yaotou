@@ -10,7 +10,6 @@ const pkg = require('../package.json');
 const constant = require('./const');
 
 // commands
-const init = require('@yaotou/init');
 const exec = require('@yaotou/exec');
 
 const program = new commander.Command();
@@ -27,7 +26,6 @@ async function core(args) {
 }
 async function prepare() {
   checkVersion();
-  checkNodeVersion();
   checkRoot();
   checkUserHome();
   checkEnv();
@@ -136,19 +134,4 @@ function checkRoot() {
 // npm: npmlog
 function checkVersion() {
   log.notice('cli version', pkg.version);
-}
-
-// 检查node 版本
-// npm: semver
-function checkNodeVersion() {
-  // 1. 获取当前node 版本
-  const current = process.version;
-  // 2. 对比最低版本
-  const lowest_version = constant.LOWEST_NODE_VERSION;
-  // log.verbose('对比node version', '当前：', current, '最低：', lowest_version);
-  if (!semver.gte(current, lowest_version)) {
-    throw new Error(
-      colors.red(`需要安装 v${lowest_version} 以上版本的 Node.js`)
-    );
-  }
 }

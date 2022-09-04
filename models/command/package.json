@@ -1,9 +1,9 @@
 {
-  "name": "@yaotou/init",
+  "name": "@yaotou/command",
   "version": "1.1.4",
   "description": "> TODO: description",
   "author": "姚头 <632319345@qq.com>",
-  "homepage": "https://github.com/yaoqq632319345/yaotou/tree/main/commands/init#readme",
+  "homepage": "https://github.com/yaoqq632319345/yaotou/tree/main/models/command#readme",
   "license": "ISC",
   "main": "lib/index.js",
   "directories": {
@@ -13,10 +13,6 @@
   "files": [
     "lib"
   ],
-  "dependencies": {
-    "@yaotou/command": "file: ../../models/command",
-    "@yaotou/log": "file: ../../utils/log"
-  },
   "publishConfig": {
     "registry": "https://registry.npmmirror.com/"
   },
@@ -29,5 +25,9 @@
   },
   "bugs": {
     "url": "https://github.com/yaoqq632319345/yaotou/issues"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "semver": "^7.3.7"
   }
 }

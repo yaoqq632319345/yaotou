@@ -24,7 +24,6 @@
     "@yaotou/log": "file: ../../../../utils/log",
     "@yaotou/exec": "file: ../exec",
     "@yaotou/utils": "file: ../../../../utils/utils",
-    "@yaotou/init": "file: ../../../../commands/init",
     "colors": "^1.4.0",
     "commander": "^9.4.0",
     "dotenv": "^16.0.1",
