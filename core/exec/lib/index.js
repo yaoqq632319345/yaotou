@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const cp = require('child_process');
 
 const Package = require('@yaotou/package');
 const log = require('@yaotou/log');
@@ -61,8 +62,21 @@ async function exec(...args) {
   if (rootFile) {
     try {
       // 在当前进程执行
-      require(rootFile)(...args);
+      // require(rootFile)(...args);
       // 其他进程执行
+      const code = 'console.log(1)';
+      const child = cp.spawn('node', ['-e', code], {
+        cwd: process.cwd(),
+        stdio: 'inherit',
+      });
+      child.on('error', (e) => {
+        log.error(e.message);
+        process.exit(1);
+      });
+      child.on('exit', (e) => {
+        log.verbose('@yaotou/exec', '命令执行成功', e);
+        process.exit(e);
+      });
     } catch (error) {
       log.error(error.message);
     }
