@@ -64,7 +64,23 @@ async function exec(...args) {
       // 在当前进程执行
       // require(rootFile)(...args);
       // 其他进程执行
-      const code = 'console.log(1)';
+      // 复制命令对象
+      const o = Object.create(null);
+      Object.keys(cmdObj).forEach((k) => {
+        if (
+          // 命令对象自己的key
+          cmdObj.hasOwnProperty(k) &&
+          // 不以 _ 开头
+          !k.startsWith('_') &&
+          // 特殊键处理
+          !['parent'].includes(k)
+        ) {
+          o[k] = cmdObj[k];
+        }
+      });
+      const code = `require('${rootFile}')('${args[0]}', ${JSON.stringify(
+        opt
+      )}, ${JSON.stringify(o)})`;
       const child = cp.spawn('node', ['-e', code], {
         cwd: process.cwd(),
         stdio: 'inherit',
