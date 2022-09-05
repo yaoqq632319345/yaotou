@@ -15,7 +15,9 @@
   ],
   "dependencies": {
     "@yaotou/command": "file: ../../models/command",
-    "@yaotou/log": "file: ../../utils/log"
+    "@yaotou/log": "file: ../../utils/log",
+    "fs-extra": "^10.1.0",
+    "inquirer": "8.0.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmmirror.com/"
