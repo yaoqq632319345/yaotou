@@ -5,6 +5,9 @@ const fse = require('fs-extra');
 const inquirer = require('inquirer');
 const Command = require('@yaotou/command');
 
+const TYPE_PROJECT = 'TYPE_PROJECT';
+const TYPE_COMPONENT = 'TYPE_COMPONENT';
+
 class InitCommand extends Command {
   init() {
     log.verbose('@yaotou/init', this._projectName, this._opt.force);
@@ -28,14 +31,16 @@ class InitCommand extends Command {
     if (!res) {
       let ifContinue = false;
       if (!this._opt.force) {
-        ifContinue = await inquirer.prompt([
-          {
-            type: 'confirm',
-            message: '当前文件夹不为空, 是否继续创建项目?',
-            default: false,
-            name: 'ifContinue',
-          },
-        ]).ifContinue;
+        ifContinue = (
+          await inquirer.prompt([
+            {
+              type: 'confirm',
+              message: '当前文件夹不为空, 是否继续创建项目?',
+              default: false,
+              name: 'ifContinue',
+            },
+          ])
+        ).ifContinue;
         if (!ifContinue) return false;
       }
       // 2. 是否启动强制更新
@@ -54,8 +59,53 @@ class InitCommand extends Command {
         }
       }
     }
+    return await this.getProjectInfo();
     // 3. 选择创建项目类型
     // 4. 获取项目的基本信息
+  }
+  async getProjectInfo() {
+    const projectInfo = {};
+    const { type } = await inquirer.prompt({
+      type: 'list',
+      name: 'type',
+      message: '请选择初始化类型',
+      default: TYPE_PROJECT,
+      choices: [
+        { name: '项目', value: TYPE_PROJECT },
+        { name: '组件', value: TYPE_COMPONENT },
+      ],
+    });
+    if (type === TYPE_PROJECT) {
+      const o = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'projectName',
+          message: '请输入项目名称',
+          default: '',
+          validate(v) {
+            return true;
+          },
+          filter(v) {
+            return v;
+          },
+        },
+        {
+          type: 'input',
+          name: 'projectVersion',
+          message: '请输入项目版本号',
+          default: '1.0.0',
+          validate(v) {
+            return true;
+          },
+          filter(v) {
+            return v;
+          },
+        },
+      ]);
+      console.log(o);
+    } else if (type === TYPE_COMPONENT) {
+    }
+    return projectInfo;
   }
   isDirEmpty(localPath) {
     let fileList = fs.readdirSync(localPath);
