@@ -20,10 +20,18 @@ class InitCommand extends Command {
       const res = await this.prepare();
       if (!res) return;
       // 2. 下载模板
+      this.downloadTemplate();
       // 3. 安装模板
     } catch (error) {
       log.error(error.message);
     }
+  }
+  downloadTemplate() {
+    // 1. 通过项目模板API获取项目模板信息
+    // 1.1 通过egg.js 搭建一套后端系统
+    // 1.2 通过npm 存储项目模板
+    // 1.3 将项目模板信息存储到mongodb数据库中
+    // 1.4 通过egg.js 获取mongodb中的数据并返回
   }
   async prepare() {
     const localPath = process.cwd(); // path.resolve('.')
@@ -65,7 +73,7 @@ class InitCommand extends Command {
     // 4. 获取项目的基本信息
   }
   async getProjectInfo() {
-    const projectInfo = {};
+    let projectInfo = {};
     const { type } = await inquirer.prompt({
       type: 'list',
       name: 'type',
@@ -77,7 +85,7 @@ class InitCommand extends Command {
       ],
     });
     if (type === TYPE_PROJECT) {
-      const o = await inquirer.prompt([
+      const project = await inquirer.prompt([
         {
           type: 'input',
           name: 'projectName',
@@ -118,7 +126,10 @@ class InitCommand extends Command {
           },
         },
       ]);
-      console.log(o);
+      projectInfo = {
+        type,
+        ...project,
+      };
     } else if (type === TYPE_COMPONENT) {
     }
     return projectInfo;
