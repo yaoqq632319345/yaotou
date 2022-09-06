@@ -1,5 +1,6 @@
 'use strict';
 const log = require('@yaotou/log');
+const semver = require('semver');
 const fs = require('fs');
 const fse = require('fs-extra');
 const inquirer = require('inquirer');
@@ -83,7 +84,16 @@ class InitCommand extends Command {
           message: '请输入项目名称',
           default: '',
           validate(v) {
-            return true;
+            const done = this.async();
+            if (
+              !/^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(
+                v
+              )
+            ) {
+              done('项目名称校验未通过');
+              return;
+            }
+            done(null, true);
           },
           filter(v) {
             return v;
@@ -95,10 +105,16 @@ class InitCommand extends Command {
           message: '请输入项目版本号',
           default: '1.0.0',
           validate(v) {
-            return true;
+            const done = this.async();
+            if (!semver.valid(v)) {
+              done('项目版本号校验未通过');
+              return;
+            }
+            done(null, true);
           },
           filter(v) {
-            return v;
+            const res = semver.valid(v);
+            return res ? res : v;
           },
         },
       ]);
