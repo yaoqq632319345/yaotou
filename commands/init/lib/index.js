@@ -135,6 +135,12 @@ class InitCommand extends Command {
             return res ? res : v;
           },
         },
+        {
+          type: 'list',
+          name: 'projectTemplate',
+          message: '请选择项目模板',
+          choices: this.createTemplateChoice(),
+        },
       ]);
       projectInfo = {
         type,
@@ -143,6 +149,11 @@ class InitCommand extends Command {
     } else if (type === TYPE_COMPONENT) {
     }
     return projectInfo;
+  }
+  createTemplateChoice() {
+    return this.template.map((temp) => {
+      return { value: temp.npmName, name: temp.name };
+    });
   }
   isDirEmpty(localPath) {
     let fileList = fs.readdirSync(localPath);
