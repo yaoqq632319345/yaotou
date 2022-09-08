@@ -6,7 +6,7 @@
   "homepage": "https://github.com/yaoqq632319345/yaotou/tree/main/template/template-vue3#readme",
   "license": "ISC",
   "publishConfig": {
-    "registry": "https://registry.npmmirror.com/"
+    "access": "public"
   },
   "repository": {
     "type": "git",

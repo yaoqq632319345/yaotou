@@ -21,7 +21,7 @@
     "semver": "^7.3.7"
   },
   "publishConfig": {
-    "registry": "https://registry.npmmirror.com/"
+    "access": "public"
   },
   "repository": {
     "type": "git",
