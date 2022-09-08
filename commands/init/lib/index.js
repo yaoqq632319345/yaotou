@@ -29,7 +29,7 @@ class InitCommand extends Command {
   downloadTemplate() {
     // 1. 通过项目模板API获取项目模板信息
     // 1.1 通过egg.js 搭建一套后端系统
-    // 1.2 通过npm 存储项目模板
+    // 1.2 通过npm 存储项目模板 (vue-cli/vue-element-admin)
     // 1.3 将项目模板信息存储到mongodb数据库中
     // 1.4 通过egg.js 获取mongodb中的数据并返回
   }
