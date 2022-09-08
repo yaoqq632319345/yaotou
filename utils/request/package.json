@@ -1,9 +1,9 @@
 {
-  "name": "@yaotou/init",
+  "name": "@yaotou/request",
   "version": "1.1.4",
   "description": "> TODO: description",
   "author": "姚头 <632319345@qq.com>",
-  "homepage": "https://github.com/yaoqq632319345/yaotou/tree/main/commands/init#readme",
+  "homepage": "https://github.com/yaoqq632319345/yaotou/tree/main/utils/request#readme",
   "license": "ISC",
   "main": "lib/index.js",
   "directories": {
@@ -13,14 +13,6 @@
   "files": [
     "lib"
   ],
-  "dependencies": {
-    "@yaotou/command": "file: ../../models/command",
-    "@yaotou/log": "file: ../../utils/log",
-    "@yaotou/request": "file: ../../utils/request",
-    "fs-extra": "^10.1.0",
-    "inquirer": "8.0.0",
-    "semver": "^7.3.7"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -33,5 +25,8 @@
   },
   "bugs": {
     "url": "https://github.com/yaoqq632319345/yaotou/issues"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
   }
 }
