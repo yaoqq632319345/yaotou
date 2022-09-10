@@ -16,6 +16,7 @@
   "dependencies": {
     "@yaotou/command": "file: ../../models/command",
     "@yaotou/log": "file: ../../utils/log",
+    "@yaotou/utils": "file: ../../utils/utils",
     "@yaotou/package": "file: ../../models/package",
     "@yaotou/request": "file: ../../utils/request",
     "fs-extra": "^10.1.0",

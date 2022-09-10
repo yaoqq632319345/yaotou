@@ -8,6 +8,7 @@ const userHome = require('user-home');
 const inquirer = require('inquirer');
 const Command = require('@yaotou/command');
 const Package = require('@yaotou/package');
+const { spinnerStart, sleep } = require('@yaotou/utils');
 const DEFAULT_CLI_HOME = process.env.CLI_HOME_PATH;
 
 const getProjectTemplate = require('./getProjectTemplate');
@@ -52,9 +53,17 @@ class InitCommand extends Command {
       packageVersion: templateInfo.version,
     });
     if (!(await templatePackage.exists())) {
+      const spinner = spinnerStart('正在下载模板...');
+      await sleep();
       await templatePackage.install();
+      spinner.stop(true);
+      log.notice('下载成功');
     } else {
+      const spinner = spinnerStart('正在更新模板...');
+      await sleep();
       await templatePackage.update();
+      spinner.stop(true);
+      log.notice('更新成功');
     }
   }
   async prepare() {
