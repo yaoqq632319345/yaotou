@@ -8,6 +8,7 @@ const userHome = require('user-home');
 const inquirer = require('inquirer');
 const Command = require('@yaotou/command');
 const Package = require('@yaotou/package');
+const DEFAULT_CLI_HOME = process.env.CLI_HOME_PATH;
 
 const getProjectTemplate = require('./getProjectTemplate');
 
@@ -42,13 +43,8 @@ class InitCommand extends Command {
     const templateInfo = this.template.find(
       (item) => item.npmName === packageName
     );
-    const targetPath = path.resolve(userHome, '.yaotou-cli', 'template'),
-      storeDir = path.resolve(
-        userHome,
-        '.yaotou-cli',
-        'template',
-        'node_modules'
-      );
+    const targetPath = path.resolve(DEFAULT_CLI_HOME, 'template'),
+      storeDir = path.resolve(DEFAULT_CLI_HOME, 'template', 'node_modules');
     const templatePackage = new Package({
       targetPath,
       storeDir,
