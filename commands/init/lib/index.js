@@ -55,15 +55,25 @@ class InitCommand extends Command {
     if (!(await templatePackage.exists())) {
       const spinner = spinnerStart('正在下载模板...');
       await sleep();
-      await templatePackage.install();
-      spinner.stop(true);
-      log.notice('下载成功');
+      try {
+        await templatePackage.install();
+        log.notice('下载成功');
+      } catch (error) {
+        throw error;
+      } finally {
+        spinner.stop(true);
+      }
     } else {
       const spinner = spinnerStart('正在更新模板...');
       await sleep();
-      await templatePackage.update();
-      spinner.stop(true);
-      log.notice('更新成功');
+      try {
+        await templatePackage.update();
+        log.notice('更新成功');
+      } catch (error) {
+        throw error;
+      } finally {
+        spinner.stop(true);
+      }
     }
   }
   async prepare() {
