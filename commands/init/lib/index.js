@@ -2,9 +2,12 @@
 const log = require('@yaotou/log');
 const semver = require('semver');
 const fs = require('fs');
+const path = require('path');
 const fse = require('fs-extra');
+const userHome = require('user-home');
 const inquirer = require('inquirer');
 const Command = require('@yaotou/command');
+const Package = require('@yaotou/package');
 
 const getProjectTemplate = require('./getProjectTemplate');
 
@@ -23,19 +26,40 @@ class InitCommand extends Command {
       if (!res) return;
       this.projectInfo = res;
       // 2. 下载模板
-      this.downloadTemplate();
+      await this.downloadTemplate();
       // 3. 安装模板
     } catch (error) {
       log.error(error.message);
     }
   }
-  downloadTemplate() {
+  async downloadTemplate() {
     // 1. 通过项目模板API获取项目模板信息
     // 1.1 通过egg.js 搭建一套后端系统
     // 1.2 通过npm 存储项目模板 (vue-cli/vue-element-admin)
-    console.log(this.projectInfo, this.template);
     // 1.3 将项目模板信息存储到mongodb数据库中
     // 1.4 通过egg.js 获取mongodb中的数据并返回
+    const { projectTemplate: packageName } = this.projectInfo;
+    const templateInfo = this.template.find(
+      (item) => item.npmName === packageName
+    );
+    const targetPath = path.resolve(userHome, '.yaotou-cli', 'template'),
+      storeDir = path.resolve(
+        userHome,
+        '.yaotou-cli',
+        'template',
+        'node_modules'
+      );
+    const templatePackage = new Package({
+      targetPath,
+      storeDir,
+      packageName,
+      packageVersion: templateInfo.version,
+    });
+    if (!(await templatePackage.exists())) {
+      await templatePackage.install();
+    } else {
+      await templatePackage.update();
+    }
   }
   async prepare() {
     // 判断模板是否存在

@@ -16,10 +16,12 @@
   "dependencies": {
     "@yaotou/command": "file: ../../models/command",
     "@yaotou/log": "file: ../../utils/log",
+    "@yaotou/package": "file: ../../models/package",
     "@yaotou/request": "file: ../../utils/request",
     "fs-extra": "^10.1.0",
     "inquirer": "8.0.0",
-    "semver": "^7.3.7"
+    "semver": "^7.3.7",
+    "user-home": "3.0.0"
   },
   "publishConfig": {
     "access": "public"
