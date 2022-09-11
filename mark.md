@@ -42,3 +42,21 @@ J --N--> Z
 J --Y--> K
 K --> Z
 ```
+
+### ejs
+
+- <% js 标签
+- <%\_ %>删除前面的空格
+- <%= 输出数据
+- <%- 输出非转义字符
+- <%# 注释
+- <%% %%> 输出字符串 '<%'
+- <%- include(filePath, data) -%>
+
+options:
+
+- delimiter: defalut: % (可以修改%)
+
+ejs.fileLoader:
+
+- 类似 webpack loader
