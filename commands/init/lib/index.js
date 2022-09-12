@@ -30,10 +30,27 @@ class InitCommand extends Command {
       // 2. 下载模板
       await this.downloadTemplate();
       // 3. 安装模板
+      await this.installTemplate();
     } catch (error) {
       log.error(error.message);
     }
   }
+  async installTemplate() {
+    if (this.templateInfo) {
+      if (this.templateInfo.type === 'normal') {
+        // 普通安装
+        this.installNormalTemplate();
+      } else if (this.templateInfo.type === 'custom') {
+        this.installCustomTemplate();
+      } else {
+        throw new Error('项目模板类型错误');
+      }
+    } else {
+      throw new Error('项目模板信息不存在');
+    }
+  }
+  installNormalTemplate() {}
+  installCustomTemplate() {}
   async downloadTemplate() {
     // 1. 通过项目模板API获取项目模板信息
     // 1.1 通过egg.js 搭建一套后端系统
@@ -52,27 +69,32 @@ class InitCommand extends Command {
       packageName,
       packageVersion: templateInfo.version,
     });
+    this.templateInfo = templateInfo;
     if (!(await templatePackage.exists())) {
       const spinner = spinnerStart('正在下载模板...');
       await sleep();
       try {
         await templatePackage.install();
-        log.notice('下载成功');
       } catch (error) {
         throw error;
       } finally {
         spinner.stop(true);
+        if (await templatePackage.exists()) {
+          log.notice('下载成功');
+        }
       }
     } else {
       const spinner = spinnerStart('正在更新模板...');
       await sleep();
       try {
         await templatePackage.update();
-        log.notice('更新成功');
       } catch (error) {
         throw error;
       } finally {
         spinner.stop(true);
+        if (await templatePackage.exists()) {
+          log.notice('更新成功');
+        }
       }
     }
   }
