@@ -8,7 +8,7 @@ const userHome = require('user-home');
 const inquirer = require('inquirer');
 const Command = require('@yaotou/command');
 const Package = require('@yaotou/package');
-const { spinnerStart, sleep } = require('@yaotou/utils');
+const { spinnerStart, sleep, execAsync } = require('@yaotou/utils');
 const DEFAULT_CLI_HOME = process.env.CLI_HOME_PATH;
 
 const getProjectTemplate = require('./getProjectTemplate');
@@ -68,6 +68,32 @@ class InitCommand extends Command {
     } finally {
       spinner.stop(true);
       log.notice('模板安装成功');
+    }
+    // 依赖安装
+    const { installCommand, startCommand } = this.templateInfo;
+    let installResult;
+    if (installCommand) {
+      // npm install
+      const installCmd = installCommand.split(' ');
+      const cmd = installCmd[0];
+      const args = installCmd.slice(1);
+      installResult = await execAsync(cmd, args, {
+        stdio: 'inherit',
+        cwd: process.cwd(),
+      });
+    }
+    if (installResult !== 0) {
+      throw new Error('模板 installCommand 失败');
+    }
+    // 启动命令
+    if (startCommand) {
+      const startCmd = startCommand.split(' ');
+      const cmd = startCmd[0];
+      const args = startCmd.slice(1);
+      await execAsync(cmd, args, {
+        stdio: 'inherit',
+        cwd: process.cwd(),
+      });
     }
   }
   installCustomTemplate() {}

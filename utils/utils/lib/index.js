@@ -26,9 +26,21 @@ function exec(command, args, options) {
   const cmdArgs = win32 ? ['/c'].concat(command /* 'node' */, args) : args;
   return cp.spawn(cmd, cmdArgs, options || {});
 }
+function execAsync(command, args, options) {
+  return new Promise((resolve, reject) => {
+    const p = exec(command, args, options);
+    p.on('error', (e) => {
+      reject(e);
+    });
+    p.on('exit', (c) => {
+      resolve(c);
+    });
+  });
+}
 module.exports = {
   spinnerStart,
   sleep,
   isObject,
   exec,
+  execAsync,
 };
