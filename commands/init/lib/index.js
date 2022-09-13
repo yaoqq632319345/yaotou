@@ -49,7 +49,27 @@ class InitCommand extends Command {
       throw new Error('项目模板信息不存在');
     }
   }
-  installNormalTemplate() {}
+  async installNormalTemplate() {
+    let spinner = spinnerStart('正在安装模板...');
+    await sleep();
+    try {
+      // copy 模板代码至当前目录
+      const temPath = path.resolve(
+        this.templatePackage.cacheFilePath,
+        'template'
+      );
+      const currPath = process.cwd();
+      // 确保目录存在
+      fse.ensureDirSync(temPath);
+      fse.ensureDirSync(currPath);
+      fse.copySync(temPath, currPath);
+    } catch (error) {
+      throw error;
+    } finally {
+      spinner.stop(true);
+      log.notice('模板安装成功');
+    }
+  }
   installCustomTemplate() {}
   async downloadTemplate() {
     // 1. 通过项目模板API获取项目模板信息
@@ -80,7 +100,8 @@ class InitCommand extends Command {
       } finally {
         spinner.stop(true);
         if (await templatePackage.exists()) {
-          log.notice('下载成功');
+          log.notice('下载模板成功');
+          this.templatePackage = templatePackage;
         }
       }
     } else {
@@ -93,7 +114,8 @@ class InitCommand extends Command {
       } finally {
         spinner.stop(true);
         if (await templatePackage.exists()) {
-          log.notice('更新成功');
+          log.notice('更新模板成功');
+          this.templatePackage = templatePackage;
         }
       }
     }
