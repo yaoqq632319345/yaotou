@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@yaotou/package": "file:../../models/package",
+    "@yaotou/utils": "file:../../utils/utils",
     "@yaotou/log": "file:../../utils/log"
   },
   "files": [

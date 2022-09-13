@@ -1,10 +1,10 @@
 'use strict';
 
 const path = require('path');
-const cp = require('child_process');
 
 const Package = require('@yaotou/package');
 const log = require('@yaotou/log');
+const { exec: utilsExec } = require('@yaotou/utils');
 
 const SETTINGS = {
   init: '@yaotou/init',
@@ -81,7 +81,7 @@ async function exec(...args) {
       const code = `require('${rootFile}')('${args[0]}', ${JSON.stringify(
         opt
       )}, ${JSON.stringify(o)})`;
-      const child = spawn('node', ['-e', code], {
+      const child = utilsExec('node', ['-e', code], {
         cwd: process.cwd(),
         stdio: 'inherit',
       });
@@ -97,15 +97,6 @@ async function exec(...args) {
       log.error(error.message);
     }
   }
-}
-// 兼容win32 cp.spawn('cmd', ['/c', 'node', '-e', code], options)
-function spawn(command, args, options) {
-  const win32 = process.platform === 'win32';
-  // 命令区别 'cmd' --- 'node'
-  const cmd = win32 ? 'cmd' : command;
-  // 参数区别 ['/c', 'node', '-e', code] ---- ['-e', code]
-  const cmdArgs = win32 ? ['/c'].concat(command /* 'node' */, args) : args;
-  return cp.spawn(cmd, cmdArgs, options || {});
 }
 
 module.exports = exec;
