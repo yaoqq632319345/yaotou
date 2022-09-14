@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const fse = require('fs-extra');
 const kebabCase = require('kebab-case');
+const ejs = require('ejs');
+const glob = require('glob');
 const userHome = require('user-home');
 const inquirer = require('inquirer');
 const Command = require('@yaotou/command');
@@ -70,6 +72,8 @@ class InitCommand extends Command {
       spinner.stop(true);
       log.notice('模板安装成功');
     }
+    await this.renderEjsTemplate();
+    // return;
     // 依赖安装
     const { installCommand, startCommand } = this.templateInfo;
     // npm install
@@ -80,6 +84,40 @@ class InitCommand extends Command {
     if ((await runCmd(startCommand)) !== 0) {
       throw new Error('启动命令 startCommand 失败');
     }
+  }
+  // 渲染ejs模板
+  renderEjsTemplate() {
+    const ignore = ['node_modules/**', 'public/**'];
+    const cwd = process.cwd();
+    return new Promise((resolve, reject) => {
+      glob(
+        '**',
+        {
+          cwd,
+          ignore,
+          nodir: true,
+        },
+        (err, files) => {
+          if (err) reject(err);
+          Promise.all(
+            files.map((file) => {
+              const filePath = path.join(cwd, file);
+              return new Promise((resolve, reject) => {
+                ejs.renderFile(filePath, this.projectInfo, (err, res) => {
+                  if (err) reject(err);
+                  else {
+                    fse.writeFileSync(filePath, res);
+                    resolve(res);
+                  }
+                });
+              });
+            })
+          )
+            .then(() => resolve())
+            .catch((e) => reject(e));
+        }
+      );
+    });
   }
   installCustomTemplate() {}
   async downloadTemplate() {
@@ -213,7 +251,7 @@ class InitCommand extends Command {
         },
         {
           type: 'input',
-          name: 'projectVersion',
+          name: 'version',
           message: '请输入项目版本号',
           default: '1.0.0',
           validate(v) {

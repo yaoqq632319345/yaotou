@@ -92,8 +92,8 @@ class Package {
           },
         ],
       });
-      this.packageVersion = latestPackageVersion;
     }
+    this.packageVersion = latestPackageVersion;
   }
   // 获取入口文件
   getRootFile() {

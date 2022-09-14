@@ -14,7 +14,7 @@ function spinnerStart(msg, spinnerStr = '|/-\\') {
 
   return spinner;
 }
-function sleep(time = 1000) {
+function sleep(time = 300) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
