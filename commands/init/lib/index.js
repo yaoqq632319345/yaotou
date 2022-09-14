@@ -71,29 +71,13 @@ class InitCommand extends Command {
     }
     // 依赖安装
     const { installCommand, startCommand } = this.templateInfo;
-    let installResult;
-    if (installCommand) {
-      // npm install
-      const installCmd = installCommand.split(' ');
-      const cmd = installCmd[0];
-      const args = installCmd.slice(1);
-      installResult = await execAsync(cmd, args, {
-        stdio: 'inherit',
-        cwd: process.cwd(),
-      });
-    }
-    if (installResult !== 0) {
+    // npm install
+    if ((await runCmd(installCommand)) !== 0) {
       throw new Error('模板 installCommand 失败');
     }
-    // 启动命令
-    if (startCommand) {
-      const startCmd = startCommand.split(' ');
-      const cmd = startCmd[0];
-      const args = startCmd.slice(1);
-      await execAsync(cmd, args, {
-        stdio: 'inherit',
-        cwd: process.cwd(),
-      });
+    // 启动命令: npm run dev
+    if ((await runCmd(startCommand)) !== 0) {
+      throw new Error('启动命令 startCommand 失败');
     }
   }
   installCustomTemplate() {}
@@ -273,6 +257,24 @@ class InitCommand extends Command {
     return !fileList || fileList.length === 0;
   }
 }
+
+async function runCmd(command) {
+  if (!command) throw new Error('命令不存在:' + command);
+  const cmdArr = command.split(' ');
+  const cmd = cmdArr[0];
+  const WHITE_COMMAND = ['npm', 'cnpm', 'pnpm', 'yarn'];
+  if (WHITE_COMMAND.includes(cmd)) {
+    const args = cmdArr.slice(1);
+    const res = await execAsync(cmd, args, {
+      stdio: 'inherit',
+      cwd: process.cwd(),
+    });
+    return res;
+  } else {
+    throw new Error('命令不合法:' + command);
+  }
+}
+
 /**
  *  yaotou init projectName --targetPath targetPathName --force
  * @param {*} projectName === projectName
