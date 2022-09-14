@@ -16,11 +16,12 @@
   "dependencies": {
     "@yaotou/command": "file: ../../models/command",
     "@yaotou/log": "file: ../../utils/log",
-    "@yaotou/utils": "file: ../../utils/utils",
     "@yaotou/package": "file: ../../models/package",
     "@yaotou/request": "file: ../../utils/request",
+    "@yaotou/utils": "file: ../../utils/utils",
     "fs-extra": "^10.1.0",
     "inquirer": "8.0.0",
+    "kebab-case": "^1.0.1",
     "semver": "^7.3.7",
     "user-home": "3.0.0"
   },

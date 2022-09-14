@@ -4,6 +4,7 @@ const semver = require('semver');
 const fs = require('fs');
 const path = require('path');
 const fse = require('fs-extra');
+const kebabCase = require('kebab-case');
 const userHome = require('user-home');
 const inquirer = require('inquirer');
 const Command = require('@yaotou/command');
@@ -240,6 +241,14 @@ class InitCommand extends Command {
         ...project,
       };
     } else if (type === TYPE_COMPONENT) {
+    }
+
+    // 将 projectName 转换格式  aB -> a-b
+    if (projectInfo.projectName) {
+      projectInfo.className = kebabCase(projectInfo.projectName).replace(
+        /^-/,
+        ''
+      );
     }
     return projectInfo;
   }
