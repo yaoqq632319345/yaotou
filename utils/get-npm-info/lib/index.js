@@ -25,7 +25,7 @@ function getNpmInfo(npmName, registry) {
     });
 }
 
-function getDefaultRegistry(isOriginal = false) {
+function getDefaultRegistry(isOriginal = true) {
   return isOriginal
     ? 'https://registry.npmjs.org'
     : 'https://registry.npm.taobao.org';
@@ -62,7 +62,7 @@ async function getNpmSemverVersion(baseVersion, npmName, registry) {
 async function getNpmLatestVersion(npmName, registry) {
   const versions = await getNpmVersion(npmName, registry);
   if (versions) {
-    return versions.sort((a, b) => semver.gt(b, a))[0];
+    return versions.sort((a, b) => (semver.gt(b, a) ? 1 : -1))[0];
   } else {
     return null;
   }
