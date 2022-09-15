@@ -229,18 +229,19 @@ class InitCommand extends Command {
         { name: '组件', value: TYPE_COMPONENT },
       ],
     });
+    const typeText = type === TYPE_PROJECT ? '项目' : '组件';
     const projectNamePrompt = [];
     // init xxxx 如果xxx 合法，省去项目名称录入
     if (!isValidName(this._projectName)) {
       projectNamePrompt.push({
         type: 'input',
         name: 'projectName',
-        message: '请输入项目名称',
+        message: `请输入${typeText}名称`,
         default: '',
         validate(v) {
           const done = this.async();
           if (!isValidName(v)) {
-            done('项目名称校验未通过');
+            done(`${typeText}名称校验未通过`);
             return;
           }
           done(null, true);
@@ -253,42 +254,57 @@ class InitCommand extends Command {
 
     // 对模板列表根据选择的类型过滤
     this.template = this.template.filter((t) => t.tag.includes(type));
+    const prompt = [
+      ...projectNamePrompt,
+      {
+        type: 'input',
+        name: 'version',
+        message: `请输入${typeText}版本号`,
+        default: '1.0.0',
+        validate(v) {
+          const done = this.async();
+          if (!semver.valid(v)) {
+            done(`${typeText}版本号校验未通过`);
+            return;
+          }
+          done(null, true);
+        },
+        filter(v) {
+          const res = semver.valid(v);
+          return res ? res : v;
+        },
+      },
+      {
+        type: 'list',
+        name: 'projectTemplate',
+        message: `请选择${typeText}模板`,
+        choices: this.createTemplateChoice(),
+      },
+    ];
     if (type === TYPE_PROJECT) {
-      const project = await inquirer.prompt([
-        ...projectNamePrompt,
-        {
-          type: 'input',
-          name: 'version',
-          message: '请输入项目版本号',
-          default: '1.0.0',
-          validate(v) {
-            const done = this.async();
-            if (!semver.valid(v)) {
-              done('项目版本号校验未通过');
-              return;
-            }
-            done(null, true);
-          },
-          filter(v) {
-            const res = semver.valid(v);
-            return res ? res : v;
-          },
-        },
-        {
-          type: 'list',
-          name: 'projectTemplate',
-          message: '请选择项目模板',
-          choices: this.createTemplateChoice(),
-        },
-      ]);
-      projectInfo = {
-        ...projectInfo,
-        type,
-        ...project,
-      };
     } else if (type === TYPE_COMPONENT) {
+      prompt.push({
+        type: 'input',
+        name: 'description',
+        message: '请输入组件描述',
+        default: '',
+        validate(v) {
+          const done = this.async();
+          if (!v) {
+            done('组件描述不能为空');
+            return;
+          }
+          done(null, true);
+        },
+      });
     }
 
+    const project = await inquirer.prompt(prompt);
+    projectInfo = {
+      ...projectInfo,
+      type,
+      ...project,
+    };
     // 将 projectName 转换格式  aB -> a-b
     if (projectInfo.projectName) {
       projectInfo.className = kebabCase(projectInfo.projectName).replace(
