@@ -60,3 +60,7 @@ options:
 ejs.fileLoader:
 
 - 类似 webpack loader
+
+### package.json
+
+- files 字段: npm publish 时，上传到 npm 的目录或文件

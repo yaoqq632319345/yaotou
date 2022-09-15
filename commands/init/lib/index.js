@@ -77,9 +77,11 @@ class InitCommand extends Command {
     // 依赖安装
     const { installCommand, startCommand } = this.templateInfo;
     // npm install
+    log.notice(`执行 ${installCommand} ...`);
     if ((await runCmd(installCommand)) !== 0) {
       throw new Error('模板 installCommand 失败');
     }
+    log.notice(`执行 ${startCommand} ...`);
     // 启动命令: npm run dev
     if ((await runCmd(startCommand)) !== 0) {
       throw new Error('启动命令 startCommand 失败');
