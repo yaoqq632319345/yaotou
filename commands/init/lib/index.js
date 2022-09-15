@@ -226,29 +226,31 @@ class InitCommand extends Command {
         { name: '组件', value: TYPE_COMPONENT },
       ],
     });
+    const projectNamePrompt = [];
+    // init xxxx 如果xxx 合法，省去项目名称录入
+    if (!isValidName(this._projectName)) {
+      projectNamePrompt.push({
+        type: 'input',
+        name: 'projectName',
+        message: '请输入项目名称',
+        default: '',
+        validate(v) {
+          const done = this.async();
+          if (!isValidName(v)) {
+            done('项目名称校验未通过');
+            return;
+          }
+          done(null, true);
+        },
+        filter(v) {
+          return v;
+        },
+      });
+      projectInfo.projectName = this._projectName;
+    }
     if (type === TYPE_PROJECT) {
       const project = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'projectName',
-          message: '请输入项目名称',
-          default: '',
-          validate(v) {
-            const done = this.async();
-            if (
-              !/^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(
-                v
-              )
-            ) {
-              done('项目名称校验未通过');
-              return;
-            }
-            done(null, true);
-          },
-          filter(v) {
-            return v;
-          },
-        },
+        ...projectNamePrompt,
         {
           type: 'input',
           name: 'version',
@@ -275,6 +277,7 @@ class InitCommand extends Command {
         },
       ]);
       projectInfo = {
+        ...projectInfo,
         type,
         ...project,
       };
@@ -303,6 +306,12 @@ class InitCommand extends Command {
     });
     return !fileList || fileList.length === 0;
   }
+}
+
+function isValidName(v) {
+  return /^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(
+    v
+  );
 }
 
 async function runCmd(command) {

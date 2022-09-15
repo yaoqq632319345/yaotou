@@ -78,7 +78,7 @@ async function exec(...args) {
           o[k] = cmdObj[k];
         }
       });
-      const code = `require('${rootFile}')('${args[0]}', ${JSON.stringify(
+      const code = `require('${rootFile}')('${args[0] || ''}', ${JSON.stringify(
         opt
       )}, ${JSON.stringify(o)})`;
       const child = utilsExec('node', ['-e', code], {
