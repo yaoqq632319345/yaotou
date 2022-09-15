@@ -16,8 +16,8 @@ const DEFAULT_CLI_HOME = process.env.CLI_HOME_PATH;
 
 const getProjectTemplate = require('./getProjectTemplate');
 
-const TYPE_PROJECT = 'TYPE_PROJECT';
-const TYPE_COMPONENT = 'TYPE_COMPONENT';
+const TYPE_PROJECT = 'project';
+const TYPE_COMPONENT = 'components';
 
 class InitCommand extends Command {
   init() {
@@ -87,7 +87,8 @@ class InitCommand extends Command {
   }
   // 渲染ejs模板
   renderEjsTemplate() {
-    const ignore = ['node_modules/**', 'public/**'];
+    const ejsIgnore = this.templateInfo.ejsIgnore || [];
+    const ignore = ejsIgnore.concat('**/node_modules/**');
     const cwd = process.cwd();
     return new Promise((resolve, reject) => {
       glob(
@@ -215,7 +216,9 @@ class InitCommand extends Command {
     return await this.getProjectInfo();
   }
   async getProjectInfo() {
-    let projectInfo = {};
+    let projectInfo = {
+      projectName: this._projectName,
+    };
     const { type } = await inquirer.prompt({
       type: 'list',
       name: 'type',
@@ -246,8 +249,10 @@ class InitCommand extends Command {
           return v;
         },
       });
-      projectInfo.projectName = this._projectName;
     }
+
+    // 对模板列表根据选择的类型过滤
+    this.template = this.template.filter((t) => t.tag.includes(type));
     if (type === TYPE_PROJECT) {
       const project = await inquirer.prompt([
         ...projectNamePrompt,
