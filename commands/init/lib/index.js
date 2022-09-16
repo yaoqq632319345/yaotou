@@ -122,7 +122,27 @@ class InitCommand extends Command {
       );
     });
   }
-  installCustomTemplate() {}
+  async installCustomTemplate() {
+    if (await this.templatePackage.exists()) {
+      const rootFile = this.templatePackage.getRootFile();
+      if (fs.existsSync(rootFile)) {
+        const cwd = process.cwd();
+        const options = {
+          cwd,
+          ...this.templateInfo,
+        };
+        log.notice('开始执行自定义模板安装');
+        const code = `require('${rootFile}')(${JSON.stringify(options)})`;
+        await execAsync('node', ['-e', code], {
+          stdio: 'inherit',
+          cwd,
+        });
+        log.notice('自定义模板安装执行完毕');
+      } else {
+        throw new Error('自定义模板入口文件不存在');
+      }
+    }
+  }
   async downloadTemplate() {
     // 1. 通过项目模板API获取项目模板信息
     // 1.1 通过egg.js 搭建一套后端系统
