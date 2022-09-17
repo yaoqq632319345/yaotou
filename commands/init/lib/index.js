@@ -127,9 +127,15 @@ class InitCommand extends Command {
       const rootFile = this.templatePackage.getRootFile();
       if (fs.existsSync(rootFile)) {
         const cwd = process.cwd();
+        const sourcePath = path.resolve(
+          this.templatePackage.cacheFilePath,
+          'template'
+        );
         const options = {
-          cwd,
-          ...this.templateInfo,
+          targetPath: cwd,
+          sourcePath,
+          projectInfo: this.projectInfo,
+          templateInfo: this.templateInfo,
         };
         log.notice('开始执行自定义模板安装');
         const code = `require('${rootFile}')(${JSON.stringify(options)})`;
