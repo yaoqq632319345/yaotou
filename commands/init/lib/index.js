@@ -13,6 +13,7 @@ const Command = require('@yaotou/command');
 const Package = require('@yaotou/package');
 const { spinnerStart, sleep, execAsync } = require('@yaotou/utils');
 const DEFAULT_CLI_HOME = process.env.CLI_HOME_PATH;
+const DEFAULT_TEMPLATE = require('./template');
 
 const getProjectTemplate = require('./getProjectTemplate');
 
@@ -21,7 +22,7 @@ const TYPE_COMPONENT = 'components';
 
 class InitCommand extends Command {
   init() {
-    log.verbose('@yaotou/init', this._projectName, this._opt.force);
+    log.verbose('@yaotou/init', this._projectName, this._opt.force, this._opt);
   }
   async exec() {
     log.verbose('@yaotou/init', 'exec');
@@ -200,7 +201,13 @@ class InitCommand extends Command {
   }
   async prepare() {
     // 判断模板是否存在
-    const template = await getProjectTemplate();
+    let template;
+    // 如果不请求
+    if (this._opt.noRequest) {
+      template = DEFAULT_TEMPLATE;
+    } else {
+      template = await getProjectTemplate();
+    }
     if (!template || template.length === 0) {
       throw new Error('项目模板不存在');
     }

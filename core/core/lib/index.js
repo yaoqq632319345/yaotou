@@ -47,6 +47,7 @@ function registerCommand() {
   program
     .command('init [projectName]')
     .option('-f --force', '是否强制初始化项目')
+    .option('--noRequest', '是否不请求egg模板数据库')
     .action(exec);
 
   program.on('option:debug', () => {
