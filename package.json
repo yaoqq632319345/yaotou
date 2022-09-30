@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/yaoqq632319345/yaotou#readme",
   "devDependencies": {
+    "@types/node": "^18.7.23",
     "lerna": "^5.3.0"
   },
   "workspaces": [
