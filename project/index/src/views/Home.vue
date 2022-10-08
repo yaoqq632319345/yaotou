@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
 import TemplateList from '../components/TemplateList.vue';
 const testData = [
   {
@@ -50,6 +51,8 @@ export default defineComponent({
     TemplateList,
   },
   setup() {
+    const router = useRouter();
+    // router.push()
     return {
       testData,
     };

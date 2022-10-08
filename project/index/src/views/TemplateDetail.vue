@@ -1,5 +1,6 @@
 <template>
   <div class="work-detail-container">
+    <pre>{{ route }}</pre>
     <a-row type="flex" justify="center">
       <a-col :span="8" class="cover-img">
         <img
@@ -19,7 +20,9 @@
           <div ref="container"></div>
         </div>
         <div class="use-button">
-          <a-button type="primary" size="large"> 使用模版 </a-button>
+          <router-link to="/editor">
+            <a-button type="primary" size="large"> 使用模版 </a-button>
+          </router-link>
           <a-button size="large"> 下载图片海报 </a-button>
         </div>
       </a-col>
@@ -29,7 +32,15 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-export default defineComponent({});
+import { useRoute } from 'vue-router';
+export default defineComponent({
+  setup() {
+    const route = useRoute;
+    return {
+      route,
+    };
+  },
+});
 </script>
 
 <style scoped>

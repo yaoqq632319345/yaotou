@@ -4,7 +4,9 @@
   <div class="homepage-container">
     <a-layout :style="{ background: '#fff' }">
       <a-layout-header class="header">
-        <div class="page-title">慕课乐高</div>
+        <div class="page-title">
+          <router-link to="/">慕课乐高</router-link>
+        </div>
       </a-layout-header>
       <a-layout-content class="home-layout">
         <router-view></router-view>
