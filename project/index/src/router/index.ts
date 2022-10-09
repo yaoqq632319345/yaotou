@@ -10,6 +10,9 @@ const routes = createRouter({
       path: '/',
       name: 'home',
       component: Home,
+      meta: {
+        withHeader: 'true',
+      },
     },
     {
       path: '/editor',
