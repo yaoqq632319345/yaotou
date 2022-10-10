@@ -1,6 +1,5 @@
 node_modules
 packages/**/node_modules
-.vscode
 .DS_Store
 .idea
 logs
