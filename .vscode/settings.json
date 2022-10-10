@@ -3,7 +3,6 @@
     "source.fixAll.eslint": true
   },
   "editor.fontLigatures": true,
-  "editor.formatOnSave": false,
   "editor.guides.bracketPairs": "active",
   "editor.quickSuggestions": {
     "strings": true
@@ -16,7 +15,7 @@
     "typescript",
     "typescriptreact",
     "vue",
-		"html",
+    "html",
     "json",
     "jsonc",
     "json5",
@@ -60,8 +59,5 @@
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[vue]": {
-    "editor.defaultFormatter": "Vue.volar"
   }
 }
