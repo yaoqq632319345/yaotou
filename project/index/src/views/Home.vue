@@ -5,47 +5,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import TemplateList from '../components/TemplateList.vue';
-const testData = [
-  {
-    id: 1,
-    coverImg:
-      'https://static.imooc-lego.com/upload-files/screenshot-889755.png',
-    title: '前端架构师直播海报',
-  },
-  {
-    id: 2,
-    coverImg:
-      'https://static.imooc-lego.com/upload-files/screenshot-677311.png',
-    title: '前端架构师直播海报',
-  },
-  {
-    id: 3,
-    coverImg:
-      'https://static.imooc-lego.com/upload-files/screenshot-682056.png',
-    title: '前端架构师直播海报',
-  },
-  {
-    id: 4,
-    coverImg:
-      'https://static.imooc-lego.com/upload-files/screenshot-677311.png',
-    title: '前端架构师直播海报',
-  },
-  {
-    id: 5,
-    coverImg:
-      'https://static.imooc-lego.com/upload-files/screenshot-889755.png',
-    title: '前端架构师直播海报',
-  },
-  {
-    id: 6,
-    coverImg:
-      'https://static.imooc-lego.com/upload-files/screenshot-677311.png',
-    title: '前端架构师直播海报',
-  },
-];
+
+import { useStore } from 'vuex';
+import type { GlobalDataProps } from '@/stroeTypes';
+
 export default defineComponent({
   components: {
     TemplateList,
@@ -53,6 +19,9 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     // router.push()
+
+    const store = useStore<GlobalDataProps>();
+    const testData = computed(() => store.state.templates);
     return {
       testData,
     };
