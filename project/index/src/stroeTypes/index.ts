@@ -1,17 +1,9 @@
-export interface UserProps {
-  isLogin: boolean;
-  userName?: string;
-}
+import type { TemplatesProps } from './templates';
+import type { UserProps } from './user';
 
-export interface TemplateProps {
-  id: number;
-  title: string;
-  coverImg: string;
-  author: string;
-  copiedCount: number;
-}
-
+export * from './templates';
+export * from './user';
 export interface GlobalDataProps {
   user: UserProps;
-  templates: TemplateProps[];
+  templates: TemplatesProps;
 }

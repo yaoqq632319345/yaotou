@@ -12,7 +12,7 @@ import TemplateList from '../components/TemplateList.vue';
 import { useStore } from 'vuex';
 import type { GlobalDataProps } from '@/stroeTypes';
 
-import { useList } from '@/storePinia';
+// import { useList } from '@/storePinia';
 
 export default defineComponent({
   components: {
@@ -22,9 +22,9 @@ export default defineComponent({
     const router = useRouter();
     // router.push()
 
-    // const store = useStore<GlobalDataProps>();
-    // const testData = computed(() => store.state.templates);
-    const { testData } = useList();
+    const store = useStore<GlobalDataProps>();
+    const testData = computed(() => store.state.templates.data);
+    // const { testData } = useList();
     return {
       testData,
     };
