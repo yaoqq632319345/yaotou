@@ -22,9 +22,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
+import type { GlobalDataProps } from '@/stroeTypes';
+import { useStore } from 'vuex';
 
-export default defineComponent({});
+export default defineComponent({
+  setup() {
+    const store = useStore<GlobalDataProps>();
+    const components = computed(() => store.state.editor.components);
+    console.log(components);
+    return {
+      components,
+    };
+  },
+});
 </script>
 
 <style>
