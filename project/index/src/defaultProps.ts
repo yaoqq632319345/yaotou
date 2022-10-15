@@ -52,7 +52,7 @@ export const textStylePropNames = without(
 
 // mapValues 将键值对转为vue props 需要的格式
 // { text: xxx } => { type: xxx.constructor, default: xxx }
-export const transformToComponentProps = (props: AnyObject) => {
+export const transformToComponentProps = <T extends AnyObject>(props: T) => {
   return mapValues(props, (item) => ({
     type: item.constructor,
     default: item,
