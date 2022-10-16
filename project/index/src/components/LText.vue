@@ -50,5 +50,7 @@ button.l-text-component {
 .l-text-component {
   box-sizing: border-box;
   white-space: pre-wrap;
+  /* TODO: important 样式需注意  */
+  position: relative !important;
 }
 </style>

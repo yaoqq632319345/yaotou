@@ -1,8 +1,14 @@
 <template>
   <div class="editor-container">
     <a-layout>
-      <a-layout-sider width="300" style="background: yellow">
-        <div class="sidebar-container">组件列表</div>
+      <a-layout-sider width="300" style="background: #fff">
+        <div class="sidebar-container">
+          组件列表
+          <components-list
+            :list="defaultTextTemplates"
+            @on-item-click="addItem"
+          ></components-list>
+        </div>
       </a-layout-sider>
       <a-layout style="padding: 0 24px 24px">
         <a-layout-content class="preview-container">
@@ -32,19 +38,27 @@
 import { computed, defineComponent } from 'vue';
 import type { GlobalDataProps } from '@/stroeTypes';
 import LText from '@/components/LText.vue';
+import ComponentsList from '@/components/ComponentsList.vue';
 
 import { useStore } from 'vuex';
+
+import { defaultTextTemplates } from '@/defaultTemplates';
 
 export default defineComponent({
   components: {
     LText,
+    ComponentsList,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
     const components = computed(() => store.state.editor.components);
-    console.log(components);
+    const addItem = (props: any) => {
+      store.commit('addComponent', props);
+    };
     return {
+      addItem,
       components,
+      defaultTextTemplates,
     };
   },
 });
