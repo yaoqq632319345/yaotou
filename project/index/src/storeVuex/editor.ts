@@ -18,6 +18,15 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       };
       state.components.push(newComponent);
     },
+    setActive(state, currentId: string) {
+      state.currentElement = currentId;
+    },
+  },
+  getters: {
+    getCurrentElement: (state) =>
+      state.components.find(
+        (component) => component.id === state.currentElement
+      ),
   },
 };
 

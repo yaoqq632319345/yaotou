@@ -14,21 +14,27 @@
         <a-layout-content class="preview-container">
           <p>画布区域</p>
           <div class="preview-list" id="canvas-area">
-            <component
+            <EditWrapper
               v-for="component in components"
               :key="component.id"
-              :is="component.name"
-              v-bind="component.props"
-            />
+              :id="component.id"
+              @set-active="setActive"
+              :active="currentElement?.id === component.id"
+            >
+              <component :is="component.name" v-bind="component.props" />
+            </EditWrapper>
           </div>
         </a-layout-content>
       </a-layout>
       <a-layout-sider
         width="300"
-        style="background: purple"
+        style="background: #fff"
         class="settings-panel"
       >
         组件属性
+        <pre>
+          {{ currentElement?.props }}
+        </pre>
       </a-layout-sider>
     </a-layout>
   </div>
@@ -36,9 +42,10 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import type { GlobalDataProps } from '@/stroeTypes';
+import type { ComponentData, GlobalDataProps } from '@/stroeTypes';
 import LText from '@/components/LText.vue';
 import ComponentsList from '@/components/ComponentsList.vue';
+import EditWrapper from '@/components/EditWrapper.vue';
 
 import { useStore } from 'vuex';
 
@@ -48,6 +55,7 @@ export default defineComponent({
   components: {
     LText,
     ComponentsList,
+    EditWrapper,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
@@ -55,10 +63,16 @@ export default defineComponent({
     const addItem = (props: any) => {
       store.commit('addComponent', props);
     };
+    const setActive = (id: string) => store.commit('setActive', id);
+    const currentElement = computed<ComponentData | null>(
+      () => store.getters.getCurrentElement
+    );
     return {
       addItem,
+      currentElement,
       components,
       defaultTextTemplates,
+      setActive,
     };
   },
 });
