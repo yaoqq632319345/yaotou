@@ -1,9 +1,10 @@
+import type { TextComponentProps } from '@/defaultProps';
 import { pick } from 'lodash-es';
 import { computed } from 'vue';
-import type { AnyObject } from '@/stroeTypes';
 
-export default function useComponentCommon<T extends AnyObject>(
-  props: T,
+export default function useComponentCommon(
+  // vue 中的 props 是只读并可选
+  props: Readonly<Partial<TextComponentProps>>,
   picks: string[]
 ) {
   // pick(): { text: xxx, tag: xxx, fontSize: xxx } => { fontSize: xxx }
