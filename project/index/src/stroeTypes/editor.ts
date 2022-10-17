@@ -1,3 +1,4 @@
+import type { TextComponentProps } from '@/defaultProps';
 export interface EditorProps {
   // 供中间编辑器渲染的数组
   components: ComponentData[];
@@ -7,7 +8,7 @@ export interface EditorProps {
 }
 export interface ComponentData {
   // 这个元素的 属性，属性请详见下面
-  props: { [key: string]: any };
+  props: Partial<TextComponentProps>;
   // id，uuid v4 生成
   id: string;
   // 业务组件库名称 l-text，l-image 等等

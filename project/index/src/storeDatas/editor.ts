@@ -11,6 +11,11 @@ export const testComponents: ComponentData[] = [
   {
     id: uuidv4(),
     name: 'l-text',
-    props: { text: 'hello3', fontSize: '15px' },
+    props: {
+      text: 'hello3',
+      fontSize: '15px',
+      actionType: 'url',
+      url: 'https://www.baidu.com',
+    },
   },
 ];
