@@ -32,6 +32,11 @@
         class="settings-panel"
       >
         组件属性
+        <props-table
+          v-if="currentElement && currentElement.props"
+          :props="currentElement.props"
+        >
+        </props-table>
         <pre>
           {{ currentElement?.props }}
         </pre>
@@ -46,6 +51,7 @@ import type { ComponentData, GlobalDataProps } from '@/stroeTypes';
 import LText from '@/components/LText.vue';
 import ComponentsList from '@/components/ComponentsList.vue';
 import EditWrapper from '@/components/EditWrapper.vue';
+import PropsTable from '@/components/PropsTable.vue';
 
 import { useStore } from 'vuex';
 
@@ -56,6 +62,7 @@ export default defineComponent({
     LText,
     ComponentsList,
     EditWrapper,
+    PropsTable,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
