@@ -1,7 +1,14 @@
 <template>
   <div class="props-table">
     <div v-for="(value, key) in finalProps" :key="key" class="prop-item">
-      <component v-if="value" :is="value.component" :value="value.value" />
+      <span class="label" v-if="value.text">{{ value.text }}</span>
+      <div class="prop-component">
+        <component
+          :is="value.component"
+          :value="value.value"
+          v-bind="value.extraProps"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -21,11 +28,14 @@ export default defineComponent({
   },
   setup(props) {
     // 将所有属性对应的组件获取到
+    // console.log(props); // text: xxx, color: xxx ...
     const finalProps = computed(() => {
       return reduce(
         props.props,
         (result, value, key) => {
+          // 得到text | color ...
           const newKey = key as keyof TextComponentProps;
+          // 得到text -> 组件
           const item = mapPropsToForms[newKey];
           if (item) {
             item.value = value;
@@ -33,10 +43,9 @@ export default defineComponent({
           }
           return result;
         },
-        {} as PropsToForms
+        {} as Required<PropsToForms>
       );
     });
-    console.log(finalProps);
     return {
       finalProps,
     };
@@ -44,4 +53,16 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+.prop-item {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+}
+.label {
+  width: 28%;
+}
+.prop-component {
+  width: 70%;
+}
+</style>
