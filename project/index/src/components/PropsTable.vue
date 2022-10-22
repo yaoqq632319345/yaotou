@@ -7,7 +7,18 @@
           :is="value.component"
           :value="value.value"
           v-bind="value.extraProps"
-        />
+        >
+          <template v-if="value.options">
+            <component
+              :is="value.subComponent"
+              v-for="(option, k) in value.options"
+              :key="k"
+              :value="option.value"
+            >
+              {{ option.text }}
+            </component>
+          </template>
+        </component>
       </div>
     </div>
   </div>
@@ -38,7 +49,7 @@ export default defineComponent({
           // 得到text -> 组件
           const item = mapPropsToForms[newKey];
           if (item) {
-            item.value = value;
+            item.value = item.initalTransform?.(value) || value;
             result[newKey] = item;
           }
           return result;
