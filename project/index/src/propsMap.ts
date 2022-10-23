@@ -3,6 +3,7 @@ export interface PropToForm {
   component: string;
   subComponent?: string;
   value?: string;
+  valueProp?: string;
   extraProps?: { [key: string]: any };
   text?: string;
   options?: { text: string; value: any }[];

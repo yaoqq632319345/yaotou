@@ -5,7 +5,7 @@
       <div class="prop-component">
         <component
           :is="value.component"
-          :value="value.value"
+          :[value.valueProp!]="value.value"
           v-bind="value.extraProps"
         >
           <template v-if="value.options">
@@ -50,6 +50,7 @@ export default defineComponent({
           const item = mapPropsToForms[newKey];
           if (item) {
             item.value = item.initalTransform?.(value) || value;
+            item.valueProp = item.valueProp ? item.valueProp : 'value';
             result[newKey] = item;
           }
           return result;
