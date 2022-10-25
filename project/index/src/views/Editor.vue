@@ -78,6 +78,7 @@ export default defineComponent({
 
     const handleChange = (e: any) => {
       console.log('editor.vue: ', e);
+      store.commit('updateComponent', e);
     };
     return {
       addItem,

@@ -66,6 +66,7 @@ export default defineComponent({
               valueProp = 'value',
               eventName = 'change',
               initalTransform,
+              afterTransform,
             } = item;
             const newItem: FormProps = {
               ...item,
@@ -74,7 +75,10 @@ export default defineComponent({
               eventName,
               events: {
                 [eventName]: (e: any) => {
-                  context.emit('change', { key, value: e });
+                  context.emit('change', {
+                    key,
+                    value: afterTransform ? afterTransform(e) : e,
+                  });
                 },
               },
             };
