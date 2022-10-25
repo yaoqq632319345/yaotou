@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "project/index",
+      "request": "launch",
+      "runtimeExecutable": "canary",
+      "userDataDir": false,
+      "type": "chrome",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/project/index/src"
+    },
+    {
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
