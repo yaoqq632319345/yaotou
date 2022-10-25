@@ -35,6 +35,7 @@
         <props-table
           v-if="currentElement && currentElement.props"
           :props="currentElement.props"
+          @change="handleChange"
         >
         </props-table>
         <pre>
@@ -74,12 +75,17 @@ export default defineComponent({
     const currentElement = computed<ComponentData | null>(
       () => store.getters.getCurrentElement
     );
+
+    const handleChange = (e: any) => {
+      console.log('editor.vue: ', e);
+    };
     return {
       addItem,
       currentElement,
       components,
       defaultTextTemplates,
       setActive,
+      handleChange,
     };
   },
 });
