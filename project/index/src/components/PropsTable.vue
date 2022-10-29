@@ -16,7 +16,11 @@
               :key="k"
               :value="option.value"
             >
-              {{ option.text }}
+              <template v-if="typeof option.text === 'string'">
+                {{ option.text }}
+              </template>
+              <component v-else :is="option.text"></component>
+              <!-- <render-v-node :vNode="option.text"></render-v-node> -->
             </component>
           </template>
         </component>
@@ -30,6 +34,8 @@ import { computed, defineComponent, type PropType, type VNode } from 'vue';
 import { reduce } from 'lodash';
 import { type PropsToForms, mapPropsToForms } from '../propsMap';
 import type { TextComponentProps } from '../defaultProps';
+import RenderVNode from './RenderVNode';
+
 interface FormProps {
   component: string;
   subComponent?: string;
@@ -48,6 +54,9 @@ export default defineComponent({
       type: Object as PropType<Partial<TextComponentProps>>,
       required: true,
     },
+  },
+  components: {
+    RenderVNode,
   },
   emits: ['change'],
   setup(props, context) {
