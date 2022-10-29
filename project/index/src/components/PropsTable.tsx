@@ -90,14 +90,17 @@ export default defineComponent({
               {value.text && <span class='label'>{value.text}</span>}
               <div class='prop-component'>
                 <ComponentName {...props}>
-                  {value.options &&
-                    value.options.map((option) => {
-                      return (
-                        <SubComponent value={option.value}>
-                          {option.text}
-                        </SubComponent>
-                      );
-                    })}
+                  {() =>
+                    value.options
+                      ? value.options.map((option) => {
+                          return (
+                            <SubComponent value={option.value}>
+                              {() => option.text}
+                            </SubComponent>
+                          );
+                        })
+                      : null
+                  }
                 </ComponentName>
               </div>
             </div>
