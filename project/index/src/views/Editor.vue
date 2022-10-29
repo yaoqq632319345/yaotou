@@ -52,7 +52,7 @@ import type { ComponentData, GlobalDataProps } from '@/stroeTypes';
 import LText from '@/components/LText.vue';
 import ComponentsList from '@/components/ComponentsList.vue';
 import EditWrapper from '@/components/EditWrapper.vue';
-import PropsTable from '@/components/PropsTable.vue';
+import PropsTable from '@/components/PropsTable';
 
 import { useStore } from 'vuex';
 
