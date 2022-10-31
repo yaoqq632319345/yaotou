@@ -7,6 +7,7 @@ it('mock', () => {
   expect(mockCb).toHaveBeenCalled();
   expect(mockCb).toHaveBeenCalledWith(1);
   expect(mockCb).toHaveBeenCalledTimes(1);
+  expect(mockCb).toHaveLastReturnedWith(undefined);
   // console.log(mockCb);
 });
 
@@ -14,5 +15,6 @@ it('mock implement', () => {
   const mockCb = jest.fn().mockReturnValue(2);
   mock(true, mockCb);
   expect(mockCb).toHaveBeenCalledWith(1);
+  // expect(mockCb).toHaveLastReturnedWith(3);
   expect(mockCb.mock.results[0].value).toBe(2);
 });
