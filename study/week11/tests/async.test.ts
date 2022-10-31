@@ -1,10 +1,10 @@
-const fetch = (cb) => {
+const fetchMethod = (cb: (a: string) => void) => {
   setTimeout(() => {
     cb('hello');
   }, 100);
 };
 it('cb', (done) => {
-  fetch((data) => {
+  fetchMethod((data) => {
     expect(data).toBe('hello');
     done();
   });

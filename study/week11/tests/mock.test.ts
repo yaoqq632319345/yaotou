@@ -1,4 +1,4 @@
-function mock(shoudCall, cb) {
+function mock(shoudCall: boolean, cb: (a: any) => void) {
   if (shoudCall) cb(1);
 }
 it('mock', () => {
@@ -12,8 +12,7 @@ it('mock', () => {
 
 it('mock implement', () => {
   const mockCb = jest.fn().mockReturnValue(2);
-
   mock(true, mockCb);
   expect(mockCb).toHaveBeenCalledWith(1);
-  console.log(mockCb.mock.results);
+  expect(mockCb.mock.results[0].value).toBe(2);
 });
