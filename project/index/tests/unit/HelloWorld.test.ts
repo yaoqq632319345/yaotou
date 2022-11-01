@@ -1,7 +1,8 @@
-import { shallowMount, mount } from '@vue/test-utils';
+import { shallowMount, mount, flushPromises } from '@vue/test-utils';
 import HelloWorld from '@/components/HelloWorld.vue';
 import Hello from '@/components/Hello.vue';
 import TemplateList from '@/components/TemplateList.vue';
+import axios from 'axios';
 
 describe('HelloWorld.vue', () => {
   it('renders props.msg when passed', () => {
@@ -52,5 +53,40 @@ describe('HelloWorld.vue', () => {
     // expect(events).toHaveProperty('send');
     // const sendEvent = events.send;
     // expect(sendEvent[0]).toEqual([todoContent]);
+  });
+});
+
+describe('components axios', () => {
+  const res = { data: { username: 'mock name' } };
+  it('mock', async () => {
+    const viSpyAxios = vi.spyOn(axios, 'get').mockResolvedValue(res);
+    const wrapper = await mount(HelloWorld);
+    await wrapper.get('.loadUser').trigger('click');
+    expect(axios.get).toHaveBeenCalled();
+    expect(axios.get).toHaveBeenCalledWith(
+      'https://jsonplaceholder.typicode.com/users/1'
+    );
+
+    expect(wrapper.find('.loading').exists()).toBeTruthy();
+    // 等promise走完
+    await flushPromises();
+    expect(wrapper.find('.loading').exists()).toBeFalsy();
+    expect(wrapper.get('.userName').text()).toBe('mock name');
+
+    viSpyAxios.mockRestore();
+  });
+
+  it('mock error', async () => {
+    const viSpyAxios = vi.spyOn(axios, 'get').mockRejectedValue('error mock');
+    const wrapper = await shallowMount(HelloWorld);
+    await wrapper.get('.loadUser').trigger('click');
+    expect(axios.get).toHaveBeenCalled();
+    expect(wrapper.find('.loading').exists()).toBeTruthy();
+    // 等promise走完
+    await flushPromises();
+    expect(wrapper.find('.loading').exists()).toBeFalsy();
+    expect(wrapper.find('.error').exists()).toBeTruthy();
+
+    viSpyAxios.mockRestore();
   });
 });
