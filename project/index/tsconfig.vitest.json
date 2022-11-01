@@ -4,6 +4,7 @@
   "compilerOptions": {
     "composite": true,
     "lib": [],
-    "types": ["node", "jsdom"]
+    // 全局api使用ts不报错
+    "types": ["node", "jsdom", "vitest/globals"]
   }
 }
