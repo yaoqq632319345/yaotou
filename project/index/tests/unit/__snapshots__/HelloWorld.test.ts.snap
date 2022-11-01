@@ -1,0 +1,13 @@
+// Vitest Snapshot v1
+
+exports[`HelloWorld.vue > renders props.msg when passed 1`] = `
+"<h1>new message</h1>
+<button>1</button>
+<hello-stub msg=\\"1234\\"></hello-stub>"
+`;
+
+exports[`HelloWorld.vue > renders props.msg when passed 2`] = `
+"<h1>new message</h1>
+<button>1</button>
+<h1 class=\\"hello\\">1234</h1>"
+`;
