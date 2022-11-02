@@ -8,7 +8,16 @@ import HelloWorld from '@/components/HelloWorld.vue';
 import Hello from '@/components/Hello.vue';
 import TemplateList from '@/components/TemplateList.vue';
 import axios from 'axios';
-import type { SpyInstance } from 'vitest';
+import {
+  beforeEach,
+  describe,
+  it,
+  expect,
+  type SpyInstance,
+  vi,
+  afterEach,
+  beforeAll,
+} from 'vitest';
 
 describe('HelloWorld.vue', () => {
   it('renders props.msg when passed', () => {
@@ -101,8 +110,8 @@ describe('components axios', () => {
 });
 
 beforeEach(() => {
-  console.log('beforeEach');
+  // console.log('beforeEach');
 });
 beforeAll(() => {
-  console.log('beforeAll')
-})
+  // console.log('beforeAll');
+});

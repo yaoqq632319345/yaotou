@@ -1,5 +1,6 @@
 import { mount, type VueWrapper } from '@vue/test-utils';
 import UserProfile from '@/components/UserProfile.vue';
+import { afterAll, beforeAll, vi, describe, it, expect } from 'vitest';
 let wrapper: VueWrapper<any>;
 beforeAll(() => {
   vi.mock('vuex');
