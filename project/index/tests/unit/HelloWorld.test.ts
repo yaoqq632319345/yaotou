@@ -1,8 +1,14 @@
-import { shallowMount, mount, flushPromises } from '@vue/test-utils';
+import {
+  shallowMount,
+  mount,
+  flushPromises,
+  type VueWrapper,
+} from '@vue/test-utils';
 import HelloWorld from '@/components/HelloWorld.vue';
 import Hello from '@/components/Hello.vue';
 import TemplateList from '@/components/TemplateList.vue';
 import axios from 'axios';
+import type { SpyInstance } from 'vitest';
 
 describe('HelloWorld.vue', () => {
   it('renders props.msg when passed', () => {
@@ -57,10 +63,18 @@ describe('HelloWorld.vue', () => {
 });
 
 describe('components axios', () => {
-  const res = { data: { username: 'mock name' } };
+  let viSpyAxios: SpyInstance<any>;
+  let wrapper: VueWrapper<any>;
+  beforeEach(async () => {
+    viSpyAxios = vi.spyOn(axios, 'get');
+    wrapper = await mount(HelloWorld);
+  });
+  afterEach(() => {
+    viSpyAxios.mockRestore();
+  });
   it('mock', async () => {
-    const viSpyAxios = vi.spyOn(axios, 'get').mockResolvedValue(res);
-    const wrapper = await mount(HelloWorld);
+    const res = { data: { username: 'mock name' } };
+    viSpyAxios.mockResolvedValue(res);
     await wrapper.get('.loadUser').trigger('click');
     expect(axios.get).toHaveBeenCalled();
     expect(axios.get).toHaveBeenCalledWith(
@@ -72,13 +86,10 @@ describe('components axios', () => {
     await flushPromises();
     expect(wrapper.find('.loading').exists()).toBeFalsy();
     expect(wrapper.get('.userName').text()).toBe('mock name');
-
-    viSpyAxios.mockRestore();
   });
 
   it('mock error', async () => {
-    const viSpyAxios = vi.spyOn(axios, 'get').mockRejectedValue('error mock');
-    const wrapper = await shallowMount(HelloWorld);
+    viSpyAxios.mockRejectedValue('error mock');
     await wrapper.get('.loadUser').trigger('click');
     expect(axios.get).toHaveBeenCalled();
     expect(wrapper.find('.loading').exists()).toBeTruthy();
@@ -86,7 +97,12 @@ describe('components axios', () => {
     await flushPromises();
     expect(wrapper.find('.loading').exists()).toBeFalsy();
     expect(wrapper.find('.error').exists()).toBeTruthy();
-
-    viSpyAxios.mockRestore();
   });
 });
+
+beforeEach(() => {
+  console.log('beforeEach');
+});
+beforeAll(() => {
+  console.log('beforeAll')
+})
