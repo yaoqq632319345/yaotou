@@ -18,6 +18,12 @@ export default defineConfig({
     globals: true,
   },
   resolve: {
+    /**
+     * vitest vi.mock('vue-router')
+     * Vue Warns: injection "Symbol(router)" not found
+     * https://github.com/vitest-dev/vitest/issues/1918
+     */
+    conditions: process.env.VITEST ? ['node'] : [],
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
