@@ -35,6 +35,7 @@ import { reduce } from 'lodash';
 import { type PropsToForms, mapPropsToForms } from '../propsMap';
 import type { TextComponentProps } from '../defaultProps';
 import RenderVNode from './RenderVNode';
+import ColorPicker from './ColorPicker.vue';
 
 interface FormProps {
   component: string;
@@ -57,6 +58,7 @@ export default defineComponent({
   },
   components: {
     RenderVNode,
+    ColorPicker,
   },
   emits: ['change'],
   setup(props, context) {
