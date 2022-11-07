@@ -5,11 +5,16 @@
         id="color"
         type="color"
         :value="modelValue"
-        @input="onChange($event.target.value)"
+        @input="onChange((<HTMLInputElement>$event.target).value)"
       />
     </div>
     <ul class="picked-color-list">
-      <li v-for="(item, key) in colors" :key="key" :class="`item-${key}`">
+      <li
+        v-for="(item, key) in colors"
+        :key="key"
+        :class="`item-${key}`"
+        @click.prevent="onChange(item)"
+      >
         <div
           :style="{ backgroundColor: item }"
           class="color-item"
@@ -26,6 +31,13 @@ import { defineComponent, type PropType } from 'vue';
 
 export default defineComponent({
   props: {
+    // 多个v-model + 修饰符
+    testModifiers: { default: () => ({}) },
+    test: {
+      type: String,
+    },
+    // 自定义修饰符 v-model.xxx => props.modelModifiers.xxx
+    modelModifiers: { default: () => ({}) },
     modelValue: {
       type: String,
     },

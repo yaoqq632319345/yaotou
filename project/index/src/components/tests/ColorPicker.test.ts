@@ -61,11 +61,11 @@ describe('UserProfile component', () => {
     const events = wrapper.emitted('update:modelValue');
     expect(events![0]).toEqual([blackHex]);
   });
-  it.skip('should send the correct event when clicking the color list', async () => {
+  it('should send the correct event when clicking the color list', async () => {
     // 测试点击右侧颜色列表以后，是否发送对应的值
     const firstItem = wrapper.get('li:first-child div');
     firstItem.trigger('click');
-    const events = wrapper.emitted('change');
+    const events = wrapper.emitted('update:modelValue');
     expect(events![1]).toEqual([defaultColors[0]]);
   });
 });
