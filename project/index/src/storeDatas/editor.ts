@@ -8,7 +8,7 @@ export const testComponents: ComponentData[] = [
     props: {
       text: 'hello',
       fontSize: '20px',
-      color: 'red',
+      color: '#aaaaaa',
       lineHeight: '1',
       textAlign: 'left',
       fontFamily: '',
