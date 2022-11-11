@@ -16,6 +16,7 @@ export default defineConfig({
   test: {
     // 全局api不用导入, vitest默认像test(), it()等方法需要导入
     // globals: true,
+    // clearMocks: true,
   },
   resolve: {
     /**
