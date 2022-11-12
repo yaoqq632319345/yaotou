@@ -1,4 +1,9 @@
-import { flushPromises, shallowMount, VueWrapper } from '@vue/test-utils';
+import {
+  flushPromises,
+  shallowMount,
+  VueWrapper,
+  mount,
+} from '@vue/test-utils';
 import Uploader from '@/components/Uploader.vue';
 import axios from 'axios';
 import {
@@ -36,13 +41,7 @@ describe('Uploader Component', () => {
   it('upload process should works fine', async () => {
     viSpyAxios.mockResolvedValueOnce({ status: 'success' });
     const fileInput = wrapper.get('input').element as HTMLInputElement;
-    const testFile = new File(['xyz'], 'test.png', { type: 'image/png' });
-    const files = [testFile];
-    // input files 是只读的，所以只能用这种方式赋值
-    Object.defineProperty(fileInput, 'files', {
-      value: files,
-      writable: false,
-    });
+    const testFile = setInputValue(fileInput);
     await wrapper.get('input').trigger('change');
     expect(axios.post).toHaveBeenCalledTimes(1);
     // 已知参数个数判断部分调用函数，其他未知
@@ -69,13 +68,7 @@ describe('Uploader Component', () => {
     viSpyAxios.mockRejectedValueOnce({ error: 'error' });
     // 每个测试用例互不影响
     const fileInput = wrapper.get('input').element as HTMLInputElement;
-    const testFile = new File(['xyz'], 'test.png', { type: 'image/png' });
-    const files = [testFile];
-    // input files 是只读的，所以只能用这种方式赋值
-    Object.defineProperty(fileInput, 'files', {
-      value: files,
-      writable: false,
-    });
+    setInputValue(fileInput);
     await wrapper.get('input').trigger('change');
     expect(axios.post).toHaveBeenCalledTimes(1);
     // 未知参数个数，判断部分参数
@@ -96,4 +89,37 @@ describe('Uploader Component', () => {
     await lastItem.get('.delete-icon').trigger('click');
     expect(wrapper.findAll('li').length).toBe(0);
   });
+
+  it.only('should show the correct interface when using custom slot', async () => {
+    viSpyAxios.mockResolvedValueOnce({ data: { url: 'dummy.url' } });
+    const wrapper = mount(Uploader, {
+      props: {
+        action: 'test.url',
+      },
+      slots: {
+        default: '<button>Custom button</button>',
+        loading: '<div class="loading">custom loading</div>',
+        uploaded: `<template #uploaded="{ uploadedData }">
+          <div class="custom-loaded">{{uploadedData.url}}</div>
+        </template>`,
+      },
+    });
+    expect(wrapper.get('button').text()).toBe('Custom button');
+    const fileInput = wrapper.get('input').element as HTMLInputElement;
+    setInputValue(fileInput);
+    await wrapper.get('input').trigger('change');
+    expect(wrapper.get('.loading').text()).toBe('custom loading');
+    await flushPromises();
+    expect(wrapper.get('.custom-loaded').text()).toBe('dummy.url');
+  });
 });
+
+const setInputValue = (input: HTMLInputElement) => {
+  const testFile = new File(['xyz'], 'test.png', { type: 'image/png' });
+  const files = [testFile] as any;
+  Object.defineProperty(input, 'files', {
+    value: files,
+    writable: false,
+  });
+  return testFile;
+};
