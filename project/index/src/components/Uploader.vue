@@ -1,9 +1,20 @@
 <template>
   <div class="file-upload">
-    <button @click="triggerUpload" :disabled="isUploading">
-      <span v-if="isUploading">正在上传</span>
-      <span v-else>点击上传</span>
-    </button>
+    <div class="upload-area" @click="triggerUpload">
+      <slot v-if="isUploading" name="loading">
+        <button disabled>正在上传</button>
+      </slot>
+      <slot
+        name="uploaded"
+        v-else-if="lastFileData && lastFileData.loaded"
+        :uploadedData="lastFileData.data"
+      >
+        <button>点击上传</button>
+      </slot>
+      <slot v-else name="default">
+        <button>点击上传</button>
+      </slot>
+    </div>
     <input
       ref="fileInput"
       type="file"
@@ -32,6 +43,7 @@
 import { defineComponent, ref, computed, reactive } from 'vue';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { last } from 'lodash-es';
 import {
   DeleteOutlined,
   LoadingOutlined,
@@ -44,6 +56,7 @@ export interface UploadFile {
   name: string;
   status: UploadStaus;
   raw: File;
+  resp?: any;
 }
 export default defineComponent({
   components: {
@@ -96,6 +109,7 @@ export default defineComponent({
           })
           .then((resp) => {
             fileObj.status = 'success';
+            fileObj.resp = resp.data;
           })
           .catch(() => {
             fileObj.status = 'error';
@@ -107,6 +121,17 @@ export default defineComponent({
           });
       }
     };
+
+    const lastFileData = computed(() => {
+      const lastFile = last(uploadedFiles.value);
+      if (lastFile) {
+        return {
+          loaded: lastFile.status === 'success',
+          data: lastFile.resp,
+        };
+      }
+      return false;
+    });
     return {
       fileInput,
       triggerUpload,
@@ -114,6 +139,7 @@ export default defineComponent({
       isUploading,
       uploadedFiles,
       removeFile,
+      lastFileData,
     };
   },
 });

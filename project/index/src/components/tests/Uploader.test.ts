@@ -35,7 +35,7 @@ describe('Uploader Component', () => {
   });
   it('basic layout before uploading', () => {
     expect(wrapper.find('button').exists()).toBeTruthy();
-    expect(wrapper.get('button span').text()).toBe('点击上传');
+    expect(wrapper.get('button').text()).toBe('点击上传');
     expect(wrapper.get('input').isVisible()).toBeFalsy();
   });
   it('upload process should works fine', async () => {
@@ -51,7 +51,7 @@ describe('Uploader Component', () => {
       expect.any(Object)
     );
 
-    expect(wrapper.get('button span').text()).toBe('正在上传');
+    expect(wrapper.get('button').text()).toBe('正在上传');
     // button 为 disabled
     expect(wrapper.get('button').attributes()).toHaveProperty('disabled');
     // 列表长度修改，并且有正确的 class
@@ -59,7 +59,7 @@ describe('Uploader Component', () => {
     const firstItem = wrapper.get('li:first-child');
     expect(firstItem.classes()).toContain('upload-loading');
     await flushPromises();
-    expect(wrapper.get('button span').text()).toBe('点击上传');
+    expect(wrapper.get('button').text()).toBe('点击上传');
     // 有正确的 class，并且文件名称相对应
     expect(firstItem.classes()).toContain('upload-success');
     expect(firstItem.get('.filename').text()).toBe(testFile.name);
@@ -78,9 +78,9 @@ describe('Uploader Component', () => {
       expect.arrayContaining([actionURL])
     );
     expect(viSpyAxios.mock.lastCall).toContain(actionURL);
-    expect(wrapper.get('button span').text()).toBe('正在上传');
+    expect(wrapper.get('button').text()).toBe('正在上传');
     await flushPromises();
-    expect(wrapper.get('button span').text()).toBe('点击上传');
+    expect(wrapper.get('button').text()).toBe('点击上传');
     // 列表长度增加，并且列表的最后一项有正确的 class 名
     expect(wrapper.findAll('li').length).toBe(1);
     const lastItem = wrapper.get('li:last-child');
@@ -90,7 +90,7 @@ describe('Uploader Component', () => {
     expect(wrapper.findAll('li').length).toBe(0);
   });
 
-  it.only('should show the correct interface when using custom slot', async () => {
+  it('should show the correct interface when using custom slot', async () => {
     viSpyAxios.mockResolvedValueOnce({ data: { url: 'dummy.url' } });
     const wrapper = mount(Uploader, {
       props: {
