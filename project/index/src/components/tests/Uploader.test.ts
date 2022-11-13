@@ -112,6 +112,71 @@ describe('Uploader Component', () => {
     await flushPromises();
     expect(wrapper.get('.custom-loaded').text()).toBe('dummy.url');
   });
+
+  it('before upload check', async () => {
+    const callback = vi.fn();
+    viSpyAxios.mockResolvedValueOnce({ data: { url: 'dummy.url' } });
+    const checkFileSize = (file: File) => {
+      if (file.size > 2) {
+        callback();
+        return false;
+      }
+      return true;
+    };
+    const wrapper = shallowMount(Uploader, {
+      props: {
+        action: 'test.url',
+        beforeUpload: checkFileSize,
+      },
+    });
+    const fileInput = wrapper.get('input').element as HTMLInputElement;
+    setInputValue(fileInput);
+    await wrapper.get('input').trigger('change');
+    expect(axios.post).not.toHaveBeenCalled();
+    expect(wrapper.findAll('li').length).toBe(0);
+    expect(callback).toHaveBeenCalled();
+  });
+  it('before upload check using Promise', async () => {
+    viSpyAxios.mockResolvedValueOnce({ data: { url: 'dummy.url' } });
+    const failedPromise = (file: File) => {
+      return Promise.reject('wrong type');
+    };
+    const successPromise = (file: File) => {
+      const newFile = new File([file], 'new_name.docx', { type: file.type });
+      return Promise.resolve(newFile);
+    };
+    const successPromiseWithWrongType = () => {
+      return Promise.resolve('abcd');
+    };
+
+    const wrapper = shallowMount(Uploader, {
+      props: {
+        action: 'test.url',
+        beforeUpload: failedPromise,
+      },
+    });
+    // failed promise
+    const fileInput = wrapper.get('input').element as HTMLInputElement;
+    setInputValue(fileInput);
+    await wrapper.get('input').trigger('change');
+    await flushPromises();
+    expect(axios.post).not.toHaveBeenCalled();
+    expect(wrapper.findAll('li').length).toBe(0);
+    // success promise with wrong file
+    await wrapper.setProps({ beforeUpload: successPromiseWithWrongType });
+    await wrapper.get('input').trigger('change');
+    await flushPromises();
+    expect(axios.post).not.toHaveBeenCalled();
+    expect(wrapper.findAll('li').length).toBe(0);
+    // success promise with file
+    await wrapper.setProps({ beforeUpload: successPromise });
+    await wrapper.get('input').trigger('change');
+    await flushPromises();
+    expect(axios.post).toHaveBeenCalled();
+    const firstItem = wrapper.get('li:first-child');
+    expect(firstItem.classes()).toContain('upload-success');
+    expect(firstItem.get('.filename').text()).toBe('new_name.docx');
+  });
 });
 
 const setInputValue = (input: HTMLInputElement) => {
