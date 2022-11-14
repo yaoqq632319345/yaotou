@@ -1,6 +1,10 @@
 <template>
   <div class="file-upload">
-    <div class="upload-area" @click="triggerUpload">
+    <div
+      class="upload-area"
+      :class="{ 'is-dragover': drag && isDragOver }"
+      v-on="events"
+    >
       <slot v-if="isUploading" name="loading">
         <button disabled>正在上传</button>
       </slot>
@@ -74,6 +78,10 @@ export default defineComponent({
     beforeUpload: {
       type: Function as PropType<CheckUpload>,
     },
+    drag: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props) {
     const postFile = (uploadedFile: File) => {
@@ -121,9 +129,7 @@ export default defineComponent({
         fileInput.value.click();
       }
     };
-    const handleFileChange = (e: Event) => {
-      const target = e.target as HTMLInputElement;
-      const files = target.files;
+    const uploadFiles = (files: null | FileList) => {
       if (!files) return;
       const uploadedFile = files[0];
       if (props.beforeUpload) {
@@ -160,6 +166,38 @@ export default defineComponent({
       }
       return false;
     });
+
+    const isDragOver = ref(false);
+    let events: { [key: string]: (e: any) => void } = {
+      click: triggerUpload,
+    };
+    const handleFileChange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      uploadFiles(target.files);
+    };
+    const handleDrag = (e: DragEvent, over: boolean) => {
+      e.preventDefault();
+      isDragOver.value = over;
+    };
+    const handleDrop = (e: DragEvent) => {
+      e.preventDefault();
+      isDragOver.value = false;
+      if (e.dataTransfer) {
+        uploadFiles(e.dataTransfer.files);
+      }
+    };
+    if (props.drag) {
+      events = {
+        ...events,
+        dragover: (e: DragEvent) => {
+          handleDrag(e, true);
+        },
+        dragleave: (e: DragEvent) => {
+          handleDrag(e, false);
+        },
+        drop: handleDrop,
+      };
+    }
     return {
       fileInput,
       triggerUpload,
@@ -168,6 +206,8 @@ export default defineComponent({
       uploadedFiles,
       removeFile,
       lastFileData,
+      isDragOver,
+      events,
     };
   },
 });
