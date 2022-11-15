@@ -223,6 +223,7 @@ describe('Uploader Component', () => {
 
 const setInputValue = (input?: HTMLInputElement) => {
   const testFile = new File(['xyz'], 'test.png', { type: 'image/png' });
+
   if (!input) return testFile;
   const files = [testFile] as any;
   Object.defineProperty(input, 'files', {
