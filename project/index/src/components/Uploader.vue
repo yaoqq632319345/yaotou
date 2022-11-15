@@ -28,7 +28,7 @@
     <ul class="upload-list">
       <li
         :class="`uploaded-file upload-${file.status}`"
-        v-for="file in uploadedFiles"
+        v-for="file in filesList"
         :key="file.uid"
       >
         <span v-if="file.status === 'loading'" class="file-icon"
@@ -75,64 +75,41 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    // 上传前的钩子函数
     beforeUpload: {
       type: Function as PropType<CheckUpload>,
     },
+    // 是否启用拖拽上传
     drag: {
       type: Boolean,
       default: false,
     },
+    autoUpload: {
+      type: Boolean,
+      default: true,
+    },
   },
   setup(props) {
-    const postFile = (uploadedFile: File) => {
-      const formData = new FormData();
-      formData.append(uploadedFile.name, uploadedFile);
-      const fileObj = reactive<UploadFile>({
-        uid: uuidv4(),
-        size: uploadedFile.size,
-        name: uploadedFile.name,
-        status: 'loading',
-        raw: uploadedFile,
-      });
-      uploadedFiles.value.push(fileObj);
-      axios
-        .post(props.action, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          onUploadProgress(...args) {
-            console.log(args);
-          },
-        })
-        .then((resp) => {
-          fileObj.status = 'success';
-          fileObj.resp = resp.data;
-        })
-        .catch(() => {
-          fileObj.status = 'error';
-        })
-        .finally(() => {
-          if (fileInput.value) {
-            fileInput.value.value = '';
-          }
-        });
-    };
     const fileInput = ref<null | HTMLInputElement>(null);
-    const uploadedFiles = ref<UploadFile[]>([]);
+    const filesList = ref<UploadFile[]>([]);
     const isUploading = computed(() => {
-      return uploadedFiles.value.some((file) => file.status === 'loading');
+      return filesList.value.some((file) => file.status === 'loading');
+    });
+    const lastFileData = computed(() => {
+      const lastFile = last(filesList.value);
+      if (lastFile) {
+        return {
+          loaded: lastFile.status === 'success',
+          data: lastFile.resp,
+        };
+      }
+      return false;
     });
     const removeFile = (id: string) => {
-      uploadedFiles.value = uploadedFiles.value.filter(
-        (file) => file.uid !== id
-      );
+      filesList.value = filesList.value.filter((file) => file.uid !== id);
     };
-    const triggerUpload = () => {
-      if (fileInput.value) {
-        fileInput.value.click();
-      }
-    };
-    const uploadFiles = (files: null | FileList) => {
+    // step1:
+    const beforeUploadCheck = (files: null | FileList) => {
       if (!files) return;
       const uploadedFile = files[0];
       if (props.beforeUpload) {
@@ -141,7 +118,7 @@ export default defineComponent({
           result
             .then((processedFile) => {
               if (processedFile instanceof File) {
-                postFile(processedFile);
+                addFileToList(processedFile);
                 // } else {
                 //   throw new Error(
                 //     'beforeUpload Promise should return File object'
@@ -152,31 +129,65 @@ export default defineComponent({
               // console.error(e);
             });
         } else if (result === true) {
-          postFile(uploadedFile);
+          addFileToList(uploadedFile);
         }
       } else {
-        postFile(uploadedFile);
+        addFileToList(uploadedFile);
       }
     };
-
-    const lastFileData = computed(() => {
-      const lastFile = last(uploadedFiles.value);
-      if (lastFile) {
-        return {
-          loaded: lastFile.status === 'success',
-          data: lastFile.resp,
-        };
+    // step2: addFileToList
+    const addFileToList = (uploadedFile: File) => {
+      const fileObj = reactive<UploadFile>({
+        uid: uuidv4(),
+        size: uploadedFile.size,
+        name: uploadedFile.name,
+        status: 'ready',
+        raw: uploadedFile,
+      });
+      filesList.value.push(fileObj);
+      if (props.autoUpload) {
+        postFile(fileObj);
       }
-      return false;
-    });
+    };
+    // step3:
+    const postFile = (readyFile: UploadFile) => {
+      const formData = new FormData();
+      formData.append(readyFile.name, readyFile.raw);
+      readyFile.status = 'loading';
+      axios
+        .post(props.action, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress(...args) {
+            console.log(args);
+          },
+        })
+        .then((resp) => {
+          readyFile.status = 'success';
+          readyFile.resp = resp.data;
+        })
+        .catch(() => {
+          readyFile.status = 'error';
+        })
+        .finally(() => {
+          if (fileInput.value) {
+            fileInput.value.value = '';
+          }
+        });
+    };
 
     const isDragOver = ref(false);
     let events: { [key: string]: (e: any) => void } = {
-      click: triggerUpload,
+      click: () => {
+        if (fileInput.value) {
+          fileInput.value.click();
+        }
+      },
     };
     const handleFileChange = (e: Event) => {
       const target = e.target as HTMLInputElement;
-      uploadFiles(target.files);
+      beforeUploadCheck(target.files);
     };
     const handleDrag = (e: DragEvent, over: boolean) => {
       e.preventDefault();
@@ -186,9 +197,10 @@ export default defineComponent({
       e.preventDefault();
       isDragOver.value = false;
       if (e.dataTransfer) {
-        uploadFiles(e.dataTransfer.files);
+        beforeUploadCheck(e.dataTransfer.files);
       }
     };
+    // 添加drag事件
     if (props.drag) {
       events = {
         ...events,
@@ -201,16 +213,23 @@ export default defineComponent({
         drop: handleDrop,
       };
     }
+
+    // 外部主动调用
+    const uploadFiles = () => {
+      filesList.value
+        .filter((file) => file.status === 'ready')
+        .forEach((readyFile) => postFile(readyFile));
+    };
     return {
       fileInput,
-      triggerUpload,
       handleFileChange,
       isUploading,
-      uploadedFiles,
+      filesList,
       removeFile,
       lastFileData,
       isDragOver,
       events,
+      uploadFiles,
     };
   },
 });

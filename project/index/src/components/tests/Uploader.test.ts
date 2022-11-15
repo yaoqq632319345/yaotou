@@ -198,6 +198,27 @@ describe('Uploader Component', () => {
     await flushPromises();
     expect(wrapper.findAll('li').length).toBe(1);
   });
+
+  it('testing manual upload process', async () => {
+    viSpyAxios.mockResolvedValueOnce({ data: { url: 'dummy.url' } });
+    const wrapper = shallowMount(Uploader, {
+      props: {
+        action: 'test.url',
+        drag: true,
+        autoUpload: false,
+      },
+    });
+    const fileInput = wrapper.get('input').element as HTMLInputElement;
+    setInputValue(fileInput);
+    await wrapper.get('input').trigger('change');
+    expect(wrapper.findAll('li').length).toBe(1);
+    const firstItem = wrapper.get('li:first-child');
+    expect(firstItem.classes()).toContain('upload-ready');
+    wrapper.vm.uploadFiles();
+    expect(axios.post).toHaveBeenCalled();
+    await flushPromises();
+    expect(firstItem.classes()).toContain('upload-success');
+  });
 });
 
 const setInputValue = (input?: HTMLInputElement) => {
