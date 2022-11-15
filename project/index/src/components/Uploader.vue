@@ -100,6 +100,9 @@ export default defineComponent({
           headers: {
             'Content-Type': 'multipart/form-data',
           },
+          onUploadProgress(...args) {
+            console.log(args);
+          },
         })
         .then((resp) => {
           fileObj.status = 'success';
@@ -213,61 +216,78 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
+.file-upload .upload-area {
+  background: #efefef;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 20px;
+  width: 360px;
+  height: 180px;
+  text-align: center;
+  &:hover {
+    border: 1px dashed #1890ff;
+  }
+  &.is-dragover {
+    border: 2px dashed #1890ff;
+    background: rgba(#1890ff, 0.2);
+  }
+}
 .upload-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
-}
-.upload-list li {
-  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
-  font-size: 14px;
-  line-height: 1.8;
-  margin-top: 5px;
-  box-sizing: border-box;
-  border-radius: 4px;
-  min-width: 200px;
-  position: relative;
-  &:first-child {
-    margin-top: 10px;
-  }
-  .file-icon {
-    svg {
-      margin-right: 5px;
-      color: rgba(0, 0, 0, 0.45);
+  li {
+    transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+    font-size: 14px;
+    line-height: 1.8;
+    margin-top: 5px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    min-width: 200px;
+    position: relative;
+    &:first-child {
+      margin-top: 10px;
     }
-  }
-  .filename {
-    margin-left: 5px;
-    margin-right: 40px;
-  }
-  &.upload-error {
-    color: #f5222d;
-    svg {
+    .file-icon {
+      svg {
+        margin-right: 5px;
+        color: rgba(0, 0, 0, 0.45);
+      }
+    }
+    .filename {
+      margin-left: 5px;
+      margin-right: 40px;
+    }
+    &.upload-error {
       color: #f5222d;
+      svg {
+        color: #f5222d;
+      }
     }
-  }
-  .file-status {
-    display: block;
-    position: absolute;
-    right: 5px;
-    top: 0;
-    line-height: inherit;
-  }
-  .delete-icon {
-    display: none;
-    position: absolute;
-    right: 7px;
-    top: 0;
-    line-height: inherit;
-    cursor: pointer;
-  }
-  &:hover {
-    background-color: #efefef;
     .file-status {
-      display: none;
+      display: block;
+      position: absolute;
+      right: 5px;
+      top: 0;
+      line-height: inherit;
     }
     .delete-icon {
-      display: block;
+      display: none;
+      position: absolute;
+      right: 7px;
+      top: 0;
+      line-height: inherit;
+      cursor: pointer;
+    }
+    &:hover {
+      background-color: #efefef;
+      .file-status {
+        display: none;
+      }
+      .delete-icon {
+        display: block;
+      }
     }
   }
 }

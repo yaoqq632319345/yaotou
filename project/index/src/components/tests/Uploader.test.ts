@@ -177,10 +177,32 @@ describe('Uploader Component', () => {
     expect(firstItem.classes()).toContain('upload-success');
     expect(firstItem.get('.filename').text()).toBe('new_name.docx');
   });
+
+  it('testing drag and drop function', async () => {
+    viSpyAxios.mockResolvedValueOnce({ data: { url: 'dummy.url' } });
+    const wrapper = shallowMount(Uploader, {
+      props: {
+        action: 'test.url',
+        drag: true,
+      },
+    });
+    const uploadArea = wrapper.get('.upload-area');
+    await uploadArea.trigger('dragover');
+    expect(uploadArea.classes()).toContain('is-dragover');
+    await uploadArea.trigger('dragleave');
+    expect(uploadArea.classes()).not.toContain('is-dragover');
+    await uploadArea.trigger('drop', {
+      dataTransfer: { files: [setInputValue()] },
+    });
+    expect(axios.post).toHaveBeenCalled();
+    await flushPromises();
+    expect(wrapper.findAll('li').length).toBe(1);
+  });
 });
 
-const setInputValue = (input: HTMLInputElement) => {
+const setInputValue = (input?: HTMLInputElement) => {
   const testFile = new File(['xyz'], 'test.png', { type: 'image/png' });
+  if (!input) return testFile;
   const files = [testFile] as any;
   Object.defineProperty(input, 'files', {
     value: files,
