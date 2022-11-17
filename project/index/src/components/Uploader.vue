@@ -25,12 +25,18 @@
       :style="{ display: 'none' }"
       @change="handleFileChange"
     />
-    <ul class="upload-list">
+    <ul :class="`upload-list upload-list-${listType}`">
       <li
         :class="`uploaded-file upload-${file.status}`"
         v-for="file in filesList"
         :key="file.uid"
       >
+        <img
+          v-if="file.url && listType === 'picture'"
+          class="upload-list-thumbnail"
+          :src="file.url"
+          :alt="file.name"
+        />
         <span v-if="file.status === 'loading'" class="file-icon"
           ><LoadingOutlined
         /></span>
@@ -63,6 +69,7 @@ export interface UploadFile {
   status: UploadStaus;
   raw: File;
   resp?: any;
+  url?: string;
 }
 export default defineComponent({
   components: {
@@ -87,6 +94,10 @@ export default defineComponent({
     autoUpload: {
       type: Boolean,
       default: true,
+    },
+    listType: {
+      type: String as PropType<'picture' | 'text'>,
+      defualt: 'text',
     },
   },
   setup(props) {
@@ -144,6 +155,18 @@ export default defineComponent({
         status: 'ready',
         raw: uploadedFile,
       });
+      if (props.listType === 'picture') {
+        try {
+          fileObj.url = URL.createObjectURL(uploadedFile);
+        } catch (error) {
+          console.error('upload File error', error);
+        }
+        // const fileReader = new FileReader()
+        // fileReader.readAsDataURL(uploadedFile)
+        // fileReader.addEventListener('load', () => {
+        //   fileObj.url = fileReader.result as string
+        // })
+      }
       filesList.value.push(fileObj);
       if (props.autoUpload) {
         postFile(fileObj);
@@ -267,6 +290,16 @@ export default defineComponent({
     position: relative;
     &:first-child {
       margin-top: 10px;
+    }
+    .upload-list-thumbnail {
+      vertical-align: middle;
+      display: inline-block;
+      width: 70px;
+      height: 70px;
+      background-color: #fff;
+      position: relative;
+      z-index: 1;
+      object-fit: cover;
     }
     .file-icon {
       svg {
