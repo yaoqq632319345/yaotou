@@ -10,13 +10,8 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     currentElement: '',
   },
   mutations: {
-    addComponent(state, props: Partial<TextComponentProps>) {
-      const newComponent: ComponentData = {
-        id: uuidv4(),
-        name: 'l-text',
-        props,
-      };
-      state.components.push(newComponent);
+    addComponent(state, component: ComponentData) {
+      +state.components.push(component);
     },
     setActive(state, currentId: string) {
       state.currentElement = currentId;
