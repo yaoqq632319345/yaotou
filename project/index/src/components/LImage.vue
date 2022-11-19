@@ -1,13 +1,13 @@
 <template>
   <img
-    :style="styleProps"
+    :style="styleProps as StyleValue"
     class="l-image-component"
     @click.prevent="handleClick"
     :src="src"
   />
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, type StyleValue } from 'vue';
 import useComponentCommon from '../hooks/useComponentCommon';
 import {
   transformToComponentProps,

@@ -25,7 +25,7 @@ import type { UploadResp } from '@/extraType';
 export default defineComponent({
   props: {
     list: {
-      type: Array,
+      type: Array as PropType<Partial<TextComponentProps>[]>,
       required: true,
     },
   },
@@ -36,7 +36,7 @@ export default defineComponent({
     StyledUploader,
   },
   setup(props, context) {
-    const onItemClick = (props: TextComponentProps) => {
+    const onItemClick = (props: Partial<TextComponentProps>) => {
       const componentData: ComponentData = {
         name: 'l-text',
         id: uuidv4(),
