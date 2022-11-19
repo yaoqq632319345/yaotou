@@ -77,7 +77,9 @@ export const textDefaultProps: TextComponentProps = {
   ...commonDefaultProps,
 };
 
-// 将text组件需要的 style 键过滤出来
+/**
+ * 将text组件需要的 style 键过滤出来
+ */
 export const textStylePropNames = without(
   Object.keys(textDefaultProps),
   'text',

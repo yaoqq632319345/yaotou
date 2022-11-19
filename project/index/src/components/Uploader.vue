@@ -25,7 +25,7 @@
       :style="{ display: 'none' }"
       @change="handleFileChange"
     />
-    <ul :class="`upload-list upload-list-${listType}`">
+    <ul :class="`upload-list upload-list-${listType}`" v-if="showUploadList">
       <li
         :class="`uploaded-file upload-${file.status}`"
         v-for="file in filesList"
@@ -77,12 +77,16 @@ export default defineComponent({
     LoadingOutlined,
     FileOutlined,
   },
+  emits: ['success', 'error', 'change'],
   props: {
     action: {
       type: String,
       required: true,
     },
-    // 上传前的钩子函数
+    /**
+     * 文件上传前的检查,接收选中的文件
+     * 需返回Promise<File> 或者boolean,以继续上传
+     */
     beforeUpload: {
       type: Function as PropType<CheckUpload>,
     },
@@ -99,8 +103,12 @@ export default defineComponent({
       type: String as PropType<'picture' | 'text'>,
       defualt: 'text',
     },
+    showUploadList: {
+      type: Boolean,
+      default: true,
+    },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const fileInput = ref<null | HTMLInputElement>(null);
     const filesList = ref<UploadFile[]>([]);
     const isUploading = computed(() => {
@@ -189,9 +197,15 @@ export default defineComponent({
         .then((resp) => {
           readyFile.status = 'success';
           readyFile.resp = resp.data;
+          emit('success', {
+            resp: resp.data,
+            file: readyFile,
+            list: filesList.value,
+          });
         })
-        .catch(() => {
+        .catch((e: any) => {
           readyFile.status = 'error';
+          emit('error', { error: e, file: readyFile, list: filesList.value });
         })
         .finally(() => {
           if (fileInput.value) {
@@ -258,23 +272,6 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
-.file-upload .upload-area {
-  background: #efefef;
-  border: 1px dashed #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 20px;
-  width: 360px;
-  height: 180px;
-  text-align: center;
-  &:hover {
-    border: 1px dashed #1890ff;
-  }
-  &.is-dragover {
-    border: 2px dashed #1890ff;
-    background: rgba(#1890ff, 0.2);
-  }
-}
 .upload-list {
   margin: 0;
   padding: 0;

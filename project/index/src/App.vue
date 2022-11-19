@@ -9,7 +9,6 @@ const withHeader = computed(() => route.meta.withHeader);
 
 <template>
   <div class="app-container">
-    <uploader action="http://local.test:7001/api/upload/" />
     <router-view />
   </div>
 </template>
