@@ -36,3 +36,22 @@ export const commonUploadCheck = (file: File) => {
   }
   return passed;
 };
+
+/**
+ * 获取图片原始宽高
+ * @param file 图片地址或者图片文件
+ */
+export function getImageDimensions(file: string | File) {
+  return new Promise<{ width: number; height: number }>((res, rej) => {
+    const img = new Image();
+    img.src = typeof file === 'string' ? file : URL.createObjectURL(file);
+    img.onload = () => {
+      const { naturalWidth, naturalHeight } = img;
+      res({
+        width: naturalWidth,
+        height: naturalHeight,
+      });
+    };
+    img.onerror = () => rej(new Error('获取图片宽高失败'));
+  });
+}

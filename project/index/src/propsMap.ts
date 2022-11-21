@@ -30,6 +30,12 @@ const fontFamilyOptions = fontFamilyArr.map((font) => {
     // text: (<span style={{ fontFamily: font.value }}>{font.text}</span>) as VNode,
   };
 });
+
+const pxToNumberHandler: PropToForm = {
+  component: 'a-input-number',
+  initalTransform: (v: string) => parseInt(v),
+  afterTransform: (e: number) => (e ? `${e}px` : ''),
+};
 // 属性到组件的映射 -> text属性需要一个input来获取
 export const mapPropsToForms: PropsToForms = {
   text: {
@@ -40,9 +46,11 @@ export const mapPropsToForms: PropsToForms = {
   },
   fontSize: {
     text: '字号',
-    component: 'a-input-number',
-    initalTransform: (v: string) => parseInt(v),
-    afterTransform: (e: number) => (e ? `${e}px` : ''),
+    ...pxToNumberHandler,
+  },
+  width: {
+    text: '宽度',
+    ...pxToNumberHandler,
   },
   lineHeight: {
     text: '行高',
