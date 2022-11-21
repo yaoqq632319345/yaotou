@@ -1,6 +1,5 @@
 import store from '@/storeVuex/index';
 import { testData, testComponents } from '@/storeDatas';
-import type { TextComponentProps } from '@/defaultProps';
 import { clone, last } from 'lodash-es';
 import { describe, it, expect } from 'vitest';
 import type { ComponentData } from '@/stroeTypes';
@@ -42,9 +41,14 @@ describe('test vuex store', () => {
       expect(store.getters.getCurrentElement.id).toBe(cloneComponents[0].id);
     });
     it('add component should works fine', () => {
-      const payload: Partial<TextComponentProps> = {
-        text: 'text1',
+      const payload: ComponentData = {
+        name: 'l-text',
+        id: '1234',
+        props: {
+          text: 'text1',
+        },
       };
+      // 这里改了store的调用方式，所以需要改一下
       store.commit('addComponent', payload);
       expect(store.state.editor.components).toHaveLength(
         cloneComponents.length + 1

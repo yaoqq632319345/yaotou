@@ -30,7 +30,7 @@ export const commonDefaultProps: CommonComponentProps = {
   url: '',
   // size
   height: '',
-  width: '318px',
+  width: '373px',
   paddingLeft: '0px',
   paddingRight: '0px',
   paddingTop: '0px',
@@ -49,6 +49,28 @@ export const commonDefaultProps: CommonComponentProps = {
   top: '0',
   right: '0',
 };
+
+/**
+ * LImage组件的props
+ */
+export interface ImageComponentProps extends CommonComponentProps {
+  src: string;
+}
+/**
+ * LImage组件的props
+ */
+export const imageDefaultProps: ImageComponentProps = {
+  src: 'test.url',
+  ...commonDefaultProps,
+};
+
+/**
+ * img 标签的样式key
+ */
+export const imageStylePropsNames = without(
+  Object.keys(imageDefaultProps),
+  'src'
+);
 
 export interface TextComponentProps extends CommonComponentProps {
   text: string;
@@ -77,7 +99,9 @@ export const textDefaultProps: TextComponentProps = {
   ...commonDefaultProps,
 };
 
-// 将text组件需要的 style 键过滤出来
+/**
+ * 将text组件需要的 style 键过滤出来
+ */
 export const textStylePropNames = without(
   Object.keys(textDefaultProps),
   'text',
@@ -85,11 +109,15 @@ export const textStylePropNames = without(
   'actionType'
 );
 
-// mapValues 将键值对转为vue props 需要的格式
-// { text: xxx } => { type: xxx.constructor, default: xxx }
-export const transformToComponentProps = (props: TextComponentProps) => {
+/**
+ * 将默认的键值对，转为VUE 的props
+ * mapValues 将键值对转为vue props 需要的格式
+ * { text: xxx } => { type: xxx.constructor, default: xxx }
+ * @param props
+ */
+export const transformToComponentProps = <T extends {}>(props: T) => {
   return mapValues(props, (item) => ({
-    type: item.constructor as StringConstructor,
+    type: (item as any).constructor as StringConstructor,
     default: item,
   }));
 };

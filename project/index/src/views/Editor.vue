@@ -68,8 +68,8 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>();
     const components = computed(() => store.state.editor.components);
-    const addItem = (props: any) => {
-      store.commit('addComponent', props);
+    const addItem = (component: ComponentData) => {
+      store.commit('addComponent', component);
     };
     const setActive = (id: string) => store.commit('setActive', id);
     const currentElement = computed<ComponentData | null>(
