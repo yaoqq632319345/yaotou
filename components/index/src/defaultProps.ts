@@ -51,13 +51,13 @@ export const commonDefaultProps: CommonComponentProps = {
 };
 
 /**
- * LImage组件的props
+ * LImage组件的props类型
  */
 export interface ImageComponentProps extends CommonComponentProps {
   src: string;
 }
 /**
- * LImage组件的props
+ * LImage组件的props默认值
  */
 export const imageDefaultProps: ImageComponentProps = {
   src: 'test.url',
@@ -65,13 +65,16 @@ export const imageDefaultProps: ImageComponentProps = {
 };
 
 /**
- * img 标签的样式key
+ * img 标签的样式keys
  */
 export const imageStylePropsNames = without(
   Object.keys(imageDefaultProps),
   'src'
 );
 
+/**
+ * text 组件props类型
+ */
 export interface TextComponentProps extends CommonComponentProps {
   text: string;
   fontSize: string;
@@ -84,6 +87,9 @@ export interface TextComponentProps extends CommonComponentProps {
   color: string;
   backgroundColor: string;
 }
+/**
+ * text 组件props默认值
+ */
 export const textDefaultProps: TextComponentProps = {
   // basic props - font styles
   text: '正文内容',
@@ -98,7 +104,6 @@ export const textDefaultProps: TextComponentProps = {
   backgroundColor: '',
   ...commonDefaultProps,
 };
-
 /**
  * 将text组件需要的 style 键过滤出来
  */
@@ -110,14 +115,45 @@ export const textStylePropNames = without(
 );
 
 /**
+ * shape 组件props类型
+ */
+export interface ShapeComponentProps extends CommonComponentProps {
+  backgroundColor: string;
+}
+/**
+ * shape 组件props默认值
+ */
+export const shapeDefaultProps: ShapeComponentProps = {
+  backgroundColor: '',
+  ...commonDefaultProps,
+};
+/**
+ * shape 组件的样式keys
+ */
+export const shapeStylePropsNames = without(
+  Object.keys(imageDefaultProps),
+  'actionType',
+  'url'
+);
+
+export const isEditingProp = {
+  isEditing: {
+    type: Boolean,
+    default: false,
+  },
+};
+/**
  * 将默认的键值对，转为VUE 的props
  * mapValues 将键值对转为vue props 需要的格式
  * { text: xxx } => { type: xxx.constructor, default: xxx }
  * @param props
  */
 export const transformToComponentProps = <T extends {}>(props: T) => {
-  return mapValues(props, (item) => ({
-    type: (item as any).constructor as StringConstructor,
-    default: item,
-  }));
+  return {
+    ...mapValues(props, (item) => ({
+      type: (item as any).constructor as StringConstructor,
+      default: item,
+    })),
+    ...isEditingProp,
+  };
 };

@@ -5,7 +5,8 @@
     "dev": "vite",
     "build": "run-p type-check build-only",
     "test:unit": "vitest --environment jsdom",
-    "build-only": "vite build"
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "dependencies": {
     "lodash-es": "^4.17.21",
