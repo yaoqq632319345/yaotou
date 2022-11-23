@@ -4,4 +4,8 @@
   <div class="app-container"></div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.app-container {
+  background: #000;
+}
+</style>
