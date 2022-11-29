@@ -14,8 +14,8 @@ import {
   textDefaultProps,
   textStylePropNames,
   transformToComponentProps,
-} from '@/defaultProps';
-import useComponentCommon from '@/hooks/useComponentCommon';
+} from '../../defaultProps';
+import useComponentCommon from '../../hooks/useComponentCommon';
 export default defineComponent({
   name: 'l-text',
   props: {

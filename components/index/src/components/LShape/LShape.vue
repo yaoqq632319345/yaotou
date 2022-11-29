@@ -1,18 +1,18 @@
 <template>
   <div
-    :style="styleProps as StyleValue"
+    :style="styleProps"
     class="l-shape-component"
     @click.prevent="handleClick"
   ></div>
 </template>
 <script lang="ts">
 import { defineComponent, type StyleValue } from 'vue';
-import useComponentCommon from '@/hooks/useComponentCommon';
+import useComponentCommon from '../../hooks/useComponentCommon';
 import {
   transformToComponentProps,
   shapeDefaultProps,
   shapeStylePropsNames,
-} from '@/defaultProps';
+} from '../../defaultProps';
 const defaultProps = transformToComponentProps(shapeDefaultProps);
 
 // array that contains style props
@@ -29,7 +29,7 @@ export default defineComponent({
       shapeStylePropsNames
     );
     return {
-      styleProps,
+      styleProps: styleProps.value as StyleValue,
       handleClick,
     };
   },

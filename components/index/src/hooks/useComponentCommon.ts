@@ -1,4 +1,4 @@
-import type { TextComponentProps } from '@/defaultProps';
+import type { TextComponentProps } from '../defaultProps';
 import { pick } from 'lodash-es';
 import { computed } from 'vue';
 
