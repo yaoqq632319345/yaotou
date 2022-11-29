@@ -15,6 +15,7 @@ const overrides = {
 
 const file = (type) => `dist/${name}.${type}.js`;
 
+export { name, file };
 /**
  * @type { import('rollup').RollupOptions }
  */
