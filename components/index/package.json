@@ -9,6 +9,9 @@
     "clean": "rimraf ./dist",
     "test:unit": "vitest --environment jsdom"
   },
+  "main": "dist/@yaotou/components.umd.js",
+  "module": "dist/@yaotou/components.esm.js",
+  "types": "dist/@yaotou/index.d.ts",
   "dependencies": {
     "lodash-es": "^4.17.21"
   },
