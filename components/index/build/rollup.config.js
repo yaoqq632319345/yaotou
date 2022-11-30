@@ -3,6 +3,8 @@ import css from 'rollup-plugin-css-only';
 import { name } from '../package.json';
 // rollup 识别不了node_modules 下的模块
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+// 压缩混淆
+// import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 
 const overrides = {
