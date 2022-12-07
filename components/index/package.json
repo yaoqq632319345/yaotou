@@ -1,20 +1,36 @@
 {
   "name": "@yaotou/components",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "private": false,
   "scripts": {
     "dev": "vite",
     "build": "npm run clean && npm run build:esm && npm run build:umd",
     "build:esm": "rollup --config build/rollup.esm.config.js",
     "build:umd": "rollup --config build/rollup.umd.config.js",
     "clean": "rimraf ./dist",
+    "prepublishOnly": "npm run build",
     "test:unit": "vitest --environment jsdom"
   },
   "main": "dist/@yaotou/components.umd.js",
   "module": "dist/@yaotou/components.esm.js",
   "types": "dist/@yaotou/index.d.ts",
+  "author": "yaotou",
+  "license": "MIT",
+  "keywords": [
+    "Component",
+    "Vue3"
+  ],
+  "homepage": "https://github.com/yaoqq632319345/yaotou/tree/main/components/index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yaoqq632319345/yaotou/tree/main/components/index"
+  },
   "dependencies": {
     "lodash-es": "^4.17.21"
   },
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
     "vue": "^3.2.38"
   },
